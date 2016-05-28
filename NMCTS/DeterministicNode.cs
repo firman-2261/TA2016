@@ -53,10 +53,10 @@ namespace NMCTS
         {
             children = new Node[this.board.getCountActions()];
             List<Actions> tmp = this.board.getActions();
-            if (tmp.Count == 0)
+            /*if (tmp.Count == 0)
             {
                 throw new InvalidOperationException("Tidak ada aksi yang dapat dilakukan");
-            }
+            }*/
             int index = 0;
             for (int i = 0; i < tmp.Count; i++)
             {
@@ -97,7 +97,8 @@ namespace NMCTS
         public override Node select()
         {
             Node selected = null;
-            double bestValue = double.MinValue;
+            double bestUCB = -(double.MaxValue);
+            double ucb;
             /*foreach (Node c in children)
             {
                 double uctValue = c.winRate + Node.bias + Math.Sqrt(Math.Log(this.nVisits) / c.nVisits);
@@ -112,16 +113,19 @@ namespace NMCTS
                 
                 foreach (Node c in children)
                 {
-                    double uctValue =
-                               c.winRate / (c.nVisits + epsilon) +
-                                       Math.Sqrt(Math.Log(nVisits + 1) / (c.nVisits + epsilon)) +
-                                       r.NextDouble() * epsilon;
-                    // small random number to break ties randomly in unexpanded nodes
-                    //Console.WriteLine("UCT value = " + uctValue);
-                    if (uctValue > bestValue)
+                    if (c.nVisits == 0)
                     {
+                        ucb = double.MaxValue;
+                    }
+                    else
+                    {
+                        ucb = c.winRate + (bias * (Math.Sqrt((Math.Log(nVisits)) / c.nVisits)));
+                    }
+                    //Console.WriteLine("UCT value = " + uctValue);
+                    if (bestUCB <= ucb)
+                    {
+                        bestUCB = ucb;
                         selected = c;
-                        bestValue = uctValue;
                     }
                    
                 }
