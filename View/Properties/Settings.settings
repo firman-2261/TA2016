@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="View.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="FirstPlayer" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Human</Value>
+    </Setting>
+    <Setting Name="Sound" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Enable</Value>
+    </Setting>
+    <Setting Name="MovingSound" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Laser</Value>
+    </Setting>
+    <Setting Name="EndingSound" Type="System.String" Scope="User">
+      <Value Profile="(Default)">TepukTangan</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

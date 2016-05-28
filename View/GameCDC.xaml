@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="View.GameCDC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d"
+             Background="BlanchedAlmond">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <WrapPanel Margin="10 10 10 0"  Grid.Column="0" Grid.ColumnSpan="2">
+
+            <Label>Current Turn :</Label>
+            <Label Name="lblCurrentTurn">?</Label>
+            <Label Name="lblHuman">Human : </Label>
+            <Button Name="btnHuman">?</Button>
+            <Label Name="lblComputer">Computer : </Label>
+            <Button Name="btnComputer">?</Button>
+            <Label>The Rest Of Red Pieces : </Label>
+            <Label Name="lblRestOfRedPieces">16</Label>
+            <Label>The Rest Of Black Pieces :</Label>
+            <Label Name="lblRestOfBlackPieces">16</Label>
+            <Label>Counter Plies :</Label>
+            <Label Name="lblCounter">16</Label>
+        </WrapPanel>
+
+        <ToolBar Width="Auto" Visibility="Hidden"  Height="32" x:Name ="toolbar" ToolBarTray.IsLocked="True">
+
+        </ToolBar>
+
+        <Grid Margin="10" Grid.Row="2" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition ></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid  x:Name="window" Grid.Row="0" Grid.Column="0">
+
+            </Grid>
+            <Grid x:Name="windowSisaPiece" Grid.Row="1" Margin="0,10,0,0" Grid.Column="0" Height="125px">
+
+            </Grid>
+        </Grid>
+
+    </Grid>
+</UserControl>
