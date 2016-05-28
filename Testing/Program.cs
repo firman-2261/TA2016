@@ -14,13 +14,13 @@ namespace Testing
     {
         static void Main(string[] args)
         {
-            testTimeSpan();
+            //testTimeSpan();
            // testRandomMove();
             //testCannonValidMove();
             //testBoardState();
                 //testProbabilityOfFlipping();
                 //testCannonValidMove();
-                //testNMCTS();
+                testNMCTS();
                 //Console.WriteLine(Board.getUInt64BinaryString(4611686018427387904));
                 //testSwitchFlippedPieceByPosition();
                 //switchArrayByRefOrByVal();
@@ -101,27 +101,19 @@ namespace Testing
 
         static void testNMCTS()
         {
+            Console.WriteLine((-(double.MaxValue)));
             Board a = new Board();
            
             a.flip(0,0);
             DeterministicNode.side = a.sideToMove;
             DeterministicNode b = new DeterministicNode(a.getBoardState(),null);
-            for (int i = 0; i <100; i++)
+            for (int i = 0; i <3000; i++)
             {
                 //Console.WriteLine(i);
                 b.selectAction();
                 //Console.WriteLine(i);
             }
             Console.WriteLine(b.nVisits);
-            Node maxWinRate = b.children[0];
-            for (int i = 1; i < b.children.Length; i++)
-            {
-                if (maxWinRate.winRate <= b.children[i].winRate)
-                {
-                    maxWinRate = b.children[i];
-                }
-            }
-            Console.WriteLine(maxWinRate.action.ToString());
         }
 
         static void testSwitchFlippedPieceByPosition()
@@ -405,11 +397,9 @@ namespace Testing
             tmp.move(0, 4, 0, 3);//black
             //tmp.move(0, 1, 0, 0);//red
             //tmp.move(0, 3, 0, 4);//black
-            tmp.printRepeatList();
             Console.WriteLine(tmp.allPieces);
             //tmp.flip(3, 7);//red cannon
             //tmp.printRepeatList(); 
-            Console.WriteLine(tmp.getRepetitionCount());
             Console.WriteLine(tmp.isEnd());
             //Console.WriteLine(Board.getUInt64BinaryString(tmp.getCannonValidMove(0, 3).bitboard));
             //Board.printPosition(tmp.generateMove(0, 3));
@@ -479,11 +469,9 @@ namespace Testing
             tmp.move(0, 4, 0, 3);//black
             //tmp.move(0, 1, 0, 0);//red
             //tmp.move(0, 3, 0, 4);//black
-            tmp.printRepeatList();
             Console.WriteLine(tmp.allPieces);
             //tmp.flip(3, 7);//red cannon
             //tmp.printRepeatList(); 
-            Console.WriteLine(tmp.getRepetitionCount());
             Console.WriteLine(tmp.isEnd());
             //Console.WriteLine(Board.getUInt64BinaryString(tmp.getCannonValidMove(0, 3).bitboard));
             //Board.printPosition(tmp.generateMove(0, 3));

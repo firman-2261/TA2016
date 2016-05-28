@@ -279,7 +279,7 @@ namespace View
                this.Dispatcher.Invoke((Action)(() =>
                {//jalankan
                    DeterministicNode b = new DeterministicNode(this.logicalCDC.getBoardState(), null);
-                   for (int i = 0; i < 100; i++)
+                   for (int i = 0; i < 3000; i++)
                    {
                        //Console.WriteLine(i);
                        b.selectAction();
@@ -734,8 +734,9 @@ namespace View
 
         private void addSisaPiece(Brush foreground, object Content)
         {
-            sisaPieceBlack = new Position(0, (Constant.COLUMN* 2) - this.logicalCDC.getCountTakenPiecesBlack());
-            sisaPieceRed = new Position(1, (Constant.COLUMN * 2) - this.logicalCDC.getCountTakenPiecesRed());
+            //this.logicalCDC.getCountTakenPieces ditambah 1 karena logicalCDC move duluan, sehingga akan menyebabkan Index out of range
+            sisaPieceBlack = new Position(0, (Constant.COLUMN* 2) - (this.logicalCDC.getCountTakenPiecesBlack()+1));
+            sisaPieceRed = new Position(1, (Constant.COLUMN * 2) - (this.logicalCDC.getCountTakenPiecesRed()+1));
             int tmpRow, tmpColumn;
 
             if (foreground == Brushes.Black)
