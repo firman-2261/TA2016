@@ -35,43 +35,47 @@ namespace NMCTS
         public override void expand()
         {
             DeterministicNode tmpSelected = (DeterministicNode)selected;
-            tmpSelected.children = new Node[tmpSelected.board.getCountActions()];
-            List<Actions> tmp = tmpSelected.board.getActions();
-
-            if (tmp.Count == 0)
+            int actionLength=tmpSelected.board.getCountActions();
+            if (actionLength != 0)
             {
-                throw new InvalidOperationException("Tidak ada aksi yang dapat dilakukan");
-            }
+                tmpSelected.children = new Node[actionLength];
+                List<Actions> tmp = tmpSelected.board.getActions();
+                /*
+                if (tmp.Count == 0)
+                {
+                    throw new InvalidOperationException("Tidak ada aksi yang dapat dilakukan");
+                }*/
 
-            for (int i = 0; i < tmp.Count; i++)
-            {
-                if (tmp[i].action == ACTION.MOVE)
+                for (int i = 0; i < tmp.Count; i++)
                 {
-                    DeterministicActions action = (DeterministicActions)tmp[i];
-                    int length = action.to.Count;
-                    for (int x = 0; x < length; x++)
+                    if (tmp[i].action == ACTION.MOVE)
                     {
-                        BoardState tmpBoardState = tmpSelected.board.getBoardState();
-                        tmpSelected.board.move(action.from.row, action.from.column, action.to[x].row, action.to[x].column);
-                        tmpSelected.children[i] = new DeterministicNode(tmpSelected.board.getBoardState(), new Move(action.from, action.to[x]));
-                        tmpSelected.board.restoreBoardState(tmpBoardState);
+                        DeterministicActions action = (DeterministicActions)tmp[i];
+                        int length = action.to.Count;
+                        for (int x = 0; x < length; x++)
+                        {
+                            BoardState tmpBoardState = tmpSelected.board.getBoardState();
+                            tmpSelected.board.move(action.from.row, action.from.column, action.to[x].row, action.to[x].column);
+                            tmpSelected.children[i] = new DeterministicNode(tmpSelected.board.getBoardState(), new Move(action.from, action.to[x]));
+                            tmpSelected.board.restoreBoardState(tmpBoardState);
+                        }
                     }
-                }
-                else
-                {
-                    NondeterministicActions action = (NondeterministicActions)tmp[i];
-                    NondeterministicNode tmpNode = new NondeterministicNode(action.probability, new Move(action.position, action.position));
-                    tmpNode.children = new DeterministicNode[action.probability.Count];
-                    for (int x = 0; x < action.piece.Count; x++)
+                    else
                     {
-                        BoardState tmpBoardState = tmpSelected.board.getBoardState();
-                        Position tmpPosition = tmpSelected.board.getFlippedPositionByPiece(action.piece[x]);//temukan real position
-                        tmpSelected.board.switchFlippedPieceByPosition(tmpPosition.row, tmpPosition.column, action.position.row, action.position.column);//pindahkan dari real position ke position yang diinginkan
-                        tmpSelected.board.flip(action.position.row, action.position.column); //buka piece
-                        tmpNode.children[x] = new DeterministicNode(tmpSelected.board.getBoardState(), new Move(action.position, action.position));
-                        tmpSelected.board.restoreBoardState(tmpBoardState);
+                        NondeterministicActions action = (NondeterministicActions)tmp[i];
+                        NondeterministicNode tmpNode = new NondeterministicNode(action.probability, new Move(action.position, action.position));
+                        tmpNode.children = new DeterministicNode[action.probability.Count];
+                        for (int x = 0; x < action.piece.Count; x++)
+                        {
+                            BoardState tmpBoardState = tmpSelected.board.getBoardState();
+                            Position tmpPosition = tmpSelected.board.getFlippedPositionByPiece(action.piece[x]);//temukan real position
+                            tmpSelected.board.switchFlippedPieceByPosition(tmpPosition.row, tmpPosition.column, action.position.row, action.position.column);//pindahkan dari real position ke position yang diinginkan
+                            tmpSelected.board.flip(action.position.row, action.position.column); //buka piece
+                            tmpNode.children[x] = new DeterministicNode(tmpSelected.board.getBoardState(), new Move(action.position, action.position));
+                            tmpSelected.board.restoreBoardState(tmpBoardState);
+                        }
+                        tmpSelected.children[i] = tmpNode;
                     }
-                    tmpSelected.children[i] = tmpNode;
                 }
             }
         }

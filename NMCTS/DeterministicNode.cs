@@ -38,8 +38,18 @@ namespace NMCTS
             }
 
             cur.expand();
-            Node newNode = cur.select();
+            Node newNode;
+            //jika tidak ada node yang dapat di expand
+            if (((DeterministicNode)cur).children == null)
+            {
+                newNode = cur;
+            }
+            else
+            {
+                newNode = cur.select();
+            }
             visited.Add(newNode);
+            //Console.WriteLine(newNode == null);
             double value = newNode.rollOut(newNode);
             foreach (Node node in visited)
             {
@@ -51,45 +61,52 @@ namespace NMCTS
 
         public override void expand()
         {
-            children = new Node[this.board.getCountActions()];
-            List<Actions> tmp = this.board.getActions();
-            /*if (tmp.Count == 0)
+            int actionLength=this.board.getCountActions();
+            if (actionLength != 0)
             {
-                throw new InvalidOperationException("Tidak ada aksi yang dapat dilakukan");
-            }*/
-            int index = 0;
-            for (int i = 0; i < tmp.Count; i++)
-            {
-                if (tmp[i].action == ACTION.MOVE)
+                children = new Node[actionLength];
+
+                List<Actions> tmp = this.board.getActions();
+                /*if (tmp.Count == 0)
                 {
-                    DeterministicActions action = (DeterministicActions)tmp[i];
-                    int length = action.to.Count;
-                    for (int x = 0; x < length; x++)
+                    throw new InvalidOperationException("Tidak ada aksi yang dapat dilakukan");
+                }*/
+                //Console.WriteLine(tmp.Count);
+                //Console.WriteLine(children.LongLength);
+                int index = 0;
+                for (int i = 0; i < tmp.Count; i++)
+                {
+                    if (tmp[i].action == ACTION.MOVE)
                     {
-                        BoardState tmpBoardState = this.board.getBoardState();
-                        this.board.move(action.from.row,action.from.column, action.to[x].row,action.to[x].column);
-                        children[index] = new DeterministicNode(this.board.getBoardState(), new Move(action.from, action.to[x]));
-                        this.board.restoreBoardState(tmpBoardState);
+                        DeterministicActions action = (DeterministicActions)tmp[i];
+                        int length = action.to.Count;
+                        for (int x = 0; x < length; x++)
+                        {
+                            BoardState tmpBoardState = this.board.getBoardState();
+                            this.board.move(action.from.row, action.from.column, action.to[x].row, action.to[x].column);
+                            children[index] = new DeterministicNode(this.board.getBoardState(), new Move(action.from, action.to[x]));
+                            this.board.restoreBoardState(tmpBoardState);
+                            index++;
+                        }
+                    }
+                    else
+                    {
+                        NondeterministicActions action = (NondeterministicActions)tmp[i];
+                        NondeterministicNode tmpNode = new NondeterministicNode(action.probability, new Move(action.position, action.position));
+
+                        tmpNode.children = new DeterministicNode[action.probability.Count];
+                        for (int x = 0; x < action.piece.Count; x++)
+                        {
+                            BoardState tmpBoardState = this.board.getBoardState();
+                            Position tmpPosition = this.board.getFlippedPositionByPiece(action.piece[x]);//temukan real position
+                            this.board.switchFlippedPieceByPosition(tmpPosition.row, tmpPosition.column, action.position.row, action.position.column);//pindahkan dari real position ke position yang diinginkan
+                            this.board.flip(action.position.row, action.position.column); //buka piece
+                            tmpNode.children[x] = new DeterministicNode(this.board.getBoardState(), new Move(action.position, action.position));
+                            this.board.restoreBoardState(tmpBoardState);
+                        }
+                        children[index] = tmpNode;
                         index++;
                     }
-                }
-                else
-                {
-                    NondeterministicActions action = (NondeterministicActions)tmp[i];
-                    NondeterministicNode tmpNode = new NondeterministicNode(action.probability, new Move(action.position, action.position));
-
-                    tmpNode.children = new DeterministicNode[action.probability.Count];
-                    for (int x = 0; x <action.piece.Count; x++)
-                    {
-                        BoardState tmpBoardState = this.board.getBoardState();
-                        Position tmpPosition = this.board.getFlippedPositionByPiece(action.piece[x]);//temukan real position
-                        this.board.switchFlippedPieceByPosition(tmpPosition.row, tmpPosition.column,action.position.row,action.position.column);//pindahkan dari real position ke position yang diinginkan
-                        this.board.flip(action.position.row, action.position.column); //buka piece
-                        tmpNode.children[x] = new DeterministicNode(this.board.getBoardState(), new Move(action.position, action.position));
-                        this.board.restoreBoardState(tmpBoardState);
-                    }
-                    children[index] = tmpNode;
-                    index++;
                 }
             }
         }
@@ -98,7 +115,7 @@ namespace NMCTS
         {
             Node selected = null;
             double bestUCB = -(double.MaxValue);
-            double ucb;
+            double ucb=0;
             /*foreach (Node c in children)
             {
                 double uctValue = c.winRate + Node.bias + Math.Sqrt(Math.Log(this.nVisits) / c.nVisits);
@@ -129,6 +146,7 @@ namespace NMCTS
                     }
                    
                 }
+                //Console.WriteLine(children == null);
             // System.out.println("Returning: " + selected);*/
             
             return selected;
