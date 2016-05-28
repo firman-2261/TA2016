@@ -41,26 +41,7 @@ namespace Engine
         /// Jumlah bidak hitam yang sudah terbuka
         /// </summary>
         public byte flippedBlackPieces { private set; get; }
-        /// <summary>
-        /// History empty move, digunakan untuk mendeteksi threefold repetition
-        /// Setiap kali ada capture atau flip, maka seluruh history yang ada pada repeatList akan direset / dihapus
-        /// </summary>
-        public UInt64[] repeatList { private set; get; }
-        /// <summary>
-        /// Pointer daripada field repeatList.
-        /// Setiap kali ada capture atau flip, maka repeatIndex akan direset menjadi 0
-        /// Setiap kali ada empty move, maka repeatIndex akan ditambah satu
-        /// Tujuan dari repeatIndex adalah untuk optimasi langkah
-        /// </summary>
-        public byte repeatIndex { private set; get; }
-        /// <summary>
-        /// Digunakan untuk keperluan menentukan letak history move hitam yang ada di repeatList
-        /// </summary>
-        public byte blackTurn { private set; get; }
-        /// <summary>
-        /// Digunakan untuk keperluan menentukan letak history move merah yang ada di repeatList
-        /// </summary>
-        public byte redTurn { private set; get; }
+       
         #endregion
 
         #region property
@@ -268,8 +249,6 @@ namespace Engine
             restOfRedPieces = 16;
             flippedBlackPieces = 0;
             flippedRedPieces = 0;
-            repeatList = new UInt64[40];
-            repeatIndex = 0;
         }
 
         /// <summary>
@@ -280,7 +259,6 @@ namespace Engine
         {
             this.array = new Piece[Constant.ROW, Constant.COLUMN];
             this.bitboard = new UInt64[15];
-            this.repeatList = new UInt64[40];
         }
         #endregion
 
@@ -317,17 +295,6 @@ namespace Engine
             }
         }
 
-        /// <summary>
-        /// Untuk melakukan cetak isi dari field repeatList
-        /// Untuk keperluan testing
-        /// </summary>
-        public void printRepeatList()
-        {
-            for (int i = 0; i < repeatIndex; i++)
-            {
-                Console.WriteLine(i + " " + this.repeatList[i]);
-            }
-        }
         /// <summary>
         /// Untuk melakukan cetak isi dari field bitboard
         /// Untuk keperluan testing
@@ -521,41 +488,7 @@ namespace Engine
             return (UInt64)3 << (62 - offset(row,column));
         }
 
-        /// <summary>
-        /// Digunakan untuk menyimpan history move
-        /// </summary>
-        private void savePreviousState()
-        {
-
-            if (repeatIndex == (byte)(repeatList.Length - 1))
-            {
-                repeatIndex = 0;
-            }
-            this.repeatList[repeatIndex] = this.allPieces;
-            repeatIndex++;
-        }
-
-        /// <summary>
-        /// Digunakan untuk mereset / menghapus history move beserta field-field yang terkait
-        /// </summary>
-        private void resetPreviousState()
-        {
-            if (sideToMove == Constant.BLACK_SIDE)
-            {
-                blackTurn = 0;
-                redTurn = 1;
-            }
-            else
-            {
-                redTurn = 0;
-                blackTurn = 1;
-            }
-            for (int i = 0; i < repeatIndex; i++)
-            {
-                repeatList[i] = 0;
-            }
-            repeatIndex = 0;
-        }
+       
 
         #region CESPF
         /// <summary>
@@ -903,7 +836,6 @@ namespace Engine
                 }
 
                 ply = 0;
-                resetPreviousState();
             }
         }
 
@@ -946,7 +878,6 @@ namespace Engine
                                 restOfBlackPieces -= 1;
                             }
                             ply = 0;
-                            resetPreviousState();
                         }
                     }
                     else
@@ -957,7 +888,6 @@ namespace Engine
                 //empty move
                 else
                 {
-                    savePreviousState();
                     //2. kosongkan posisi awal
                     bitboard[array[fromRow, fromColumn].index] &= ~Mask.MOVE[Mask.OFFSET[fromRow, fromColumn]];
                     //3. isi posisi awal dengan posisi tujuan
@@ -1112,10 +1042,6 @@ namespace Engine
             this.restOfBlackPieces = stateToRestore.restOfBlackPieces;
             this.flippedRedPieces = stateToRestore.flippedRedPieces;
             this.flippedBlackPieces = stateToRestore.flippedBlackPieces;
-            this.repeatList = stateToRestore.repeatList.Clone() as UInt64[];
-            this.repeatIndex = stateToRestore.repeatIndex;
-            this.blackTurn = stateToRestore.blackTurn;
-            this.redTurn = stateToRestore.blackTurn;
         }
 
         /// <summary>
@@ -1607,38 +1533,6 @@ namespace Engine
             return (piece.number * side) > 0;
         }
 
-        /// <summary>
-        /// Untuk mengecek draw by threefold repetition
-        /// </summary>
-        /// <returns></returns>
-        public int getRepetitionCount()
-        {
-            int repetition = 0;
-            UInt64 tmp = this.allPieces;
-            if (sideToMove == Constant.BLACK_SIDE)
-            {
-                for (int i = blackTurn; i <= (repeatIndex - 1); i += 2)
-                {
-                    if (repeatList[i] == tmp)
-                    {
-                        //Console.WriteLine("black");
-                        repetition++;
-                    }
-                }
-            }
-            else
-            {
-                for (int i = redTurn; i <= (repeatIndex - 1); i += 2)
-                {
-                    if (repeatList[i] == tmp)
-                    {
-                        repetition++;
-                        //Console.WriteLine("red");
-                    }
-                }
-            }
-            return repetition;
-        }
 
         /// <summary>
         /// Untuk mengecek apakah game sudah berakhir
@@ -1668,13 +1562,7 @@ namespace Engine
                 return END_STATE.DRAW;
             }
 
-            //3. Terjadi perulangan posisi berturut-turut dalam 3 kali move / 6 ply
-            if (this.getRepetitionCount() >= 3)
-            {
-                return END_STATE.DRAW;
-            }
-
-            //4. Tidak ada legal move bagi salah satu pihak
+            //3. Tidak ada legal move bagi salah satu pihak
             for (int i = 0; i < Constant.ROW; i++)
             {
                 for (int j = 0; j < Constant.COLUMN; j++)

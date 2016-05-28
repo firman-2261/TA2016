@@ -16,10 +16,6 @@ namespace Engine
         public byte restOfBlackPieces { private set; get; }
         public byte flippedRedPieces { private set; get; }
         public byte flippedBlackPieces { private set; get; }
-        public UInt64[] repeatList { private set; get; }
-        public byte repeatIndex { private set; get; }
-        public byte blackTurn { private set; get; }
-        public byte redTurn { private set; get; }
 
         public BoardState(Board board)
         {
@@ -31,10 +27,6 @@ namespace Engine
             this.restOfBlackPieces = board.restOfBlackPieces;
             this.flippedRedPieces = board.flippedRedPieces;
             this.flippedBlackPieces = board.flippedBlackPieces;
-            this.repeatList = board.repeatList.Clone() as UInt64[];
-            this.repeatIndex = board.repeatIndex;
-            this.blackTurn = board.blackTurn;
-            this.redTurn = board.blackTurn;
         }
 
     }
