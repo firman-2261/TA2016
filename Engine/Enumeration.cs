@@ -26,5 +26,9 @@ namespace Engine
         HUMAN_VS_HUMAN,HUMAN_VS_COMPUTER
     }
 
+    public enum NODE
+    {
+        MIN,MAX,NONE
+    }
 
 }
