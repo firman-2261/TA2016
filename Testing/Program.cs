@@ -107,13 +107,17 @@ namespace Testing
             a.flip(0,0);
             DeterministicNode.side = a.sideToMove;
             DeterministicNode b = new DeterministicNode(a.getBoardState(),null);
-            for (int i = 0; i <3000; i++)
+            double x=0;
+            for (int i = 0; i <500; i++)
             {
                 //Console.WriteLine(i);
                 b.selectAction();
+                x += Node.s;
                 //Console.WriteLine(i);
             }
             Console.WriteLine(b.nVisits);
+            Console.WriteLine(Node.s);
+            Console.WriteLine(x/500);
         }
 
         static void testSwitchFlippedPieceByPosition()

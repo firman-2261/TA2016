@@ -12,7 +12,9 @@ namespace NMCTS
         public static Random r = new Random();
         public static double bias = 0.75;
         public static int side;
-        public static double epsilon = 1e-6;
+        public static double d = 0.01;
+        public static double PGL;
+        public static double s;
 
         public double nVisits, winRate;
         public Move action;
@@ -23,6 +25,6 @@ namespace NMCTS
 
         public virtual void expand() { }
 
-        public virtual double rollOut(Node tn) { return 0; }
+        public virtual double rollOut(Node tn,long length) { return 0; }
     }
 }

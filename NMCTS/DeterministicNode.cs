@@ -20,6 +20,7 @@ namespace NMCTS
         }
         public void selectAction()
         {
+            s = 0;
             List<Node> visited = new List<Node>();
             Node cur = this; // root
             visited.Add(this);
@@ -50,7 +51,7 @@ namespace NMCTS
             }
             visited.Add(newNode);
             //Console.WriteLine(newNode == null);
-            double value = newNode.rollOut(newNode);
+            double value = newNode.rollOut(newNode,visited.Count);
             foreach (Node node in visited)
             {
                 // would need extra logic for n-player game
@@ -152,12 +153,12 @@ namespace NMCTS
             return selected;
         }
 
-        public override double rollOut(Node tn)
+        public override double rollOut(Node tn,long length)
         {
             DeterministicNode tmp = new DeterministicNode(((DeterministicNode)tn).board.getBoardState(),null);
-           
             while (tmp.board.isEnd() == END_STATE.CONTINUE)
             {
+                s += 1;
                 CESPFMove tmpMove = tmp.board.CESPF();
                 if (tmpMove.isFlippingAction())
                 {
@@ -168,6 +169,7 @@ namespace NMCTS
                     tmp.board.move(tmpMove.move.from.row, tmpMove.move.from.column, tmpMove.move.to.row, tmpMove.move.to.column);
                 }
             }
+            //s += length;
 
             END_STATE end = tmp.board.isEnd();
             if (end == END_STATE.DRAW)
@@ -184,7 +186,7 @@ namespace NMCTS
 
         public override void updateStatus(double value)
         {
-            this.winRate += value;
+            this.winRate =this.winRate+ value + (d * (PGL-s));
             this.nVisits += 1;
         }
 

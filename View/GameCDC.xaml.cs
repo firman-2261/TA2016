@@ -278,8 +278,9 @@ namespace View
                Thread.Sleep(1000);
                this.Dispatcher.Invoke((Action)(() =>
                {//jalankan
+                   setPGLValue();
                    DeterministicNode b = new DeterministicNode(this.logicalCDC.getBoardState(), null);
-                   for (int i = 0; i < 3000; i++)
+                   for (int i = 0; i < 1000; i++)
                    {
                        //Console.WriteLine(i);
                        b.selectAction();
@@ -304,6 +305,19 @@ namespace View
                     timer.Start();
                 }
             }
+        }
+
+        public void setPGLValue()
+        {
+            DeterministicNode.side = this.logicalCDC.sideToMove;
+            DeterministicNode b = new DeterministicNode(this.logicalCDC.getBoardState(), null);
+            double x = 0;
+            for (int i = 0; i < 500; i++)
+            {
+                b.selectAction();
+                x += Node.s;
+            }
+            Node.PGL = x / 500;
         }
 
         private void onClick(object obj, RoutedEventArgs e)

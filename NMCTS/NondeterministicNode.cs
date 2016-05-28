@@ -80,7 +80,7 @@ namespace NMCTS
             }
         }
 
-        public override double rollOut(Node tn)
+        public override double rollOut(Node tn, long length)
         {
             if (((NondeterministicNode)tn).selected == null)
             {
@@ -91,6 +91,7 @@ namespace NMCTS
             
             while (tmp.board.isEnd() == END_STATE.CONTINUE)
             {
+                s += 1;
                 CESPFMove tmpMove = tmp.board.CESPF();
                 //Console.WriteLine("sebelum" + tmp.board.sideToMove +" " +move.ToString());
                 //tmp.board.printArray();
@@ -107,7 +108,7 @@ namespace NMCTS
                 tmp.board.printArray();
                 tmp.board.printBitboardBinaryString();*/
             }
-
+            //s += length;
             END_STATE end = tmp.board.isEnd();
             //Console.WriteLine((int)end);
             //Console.WriteLine(side);
@@ -125,9 +126,9 @@ namespace NMCTS
         public override void updateStatus(double value)
         {
             this.selected.nVisits += 1;
-            this.selected.winRate += value;
+            this.selected.winRate = this.selected.winRate + value + (d * (PGL - s));
             this.nVisits += 1;
-            this.winRate += value;
+            this.winRate += this.selected.winRate + value + (d * (PGL - s));
         }
         public override bool isLeaf()
         {
