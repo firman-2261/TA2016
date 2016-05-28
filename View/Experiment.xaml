@@ -1,0 +1,113 @@
+﻿<UserControl x:Class="View.Experiment"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+               xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+       Background="BlanchedAlmond">
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Border BorderBrush="Black" Margin="10" CornerRadius="5" BorderThickness="1">
+            <Grid Grid.Row="0" Margin="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+
+                <Label Grid.Row="0" Grid.Column="0">Jumlah Paralel Thread (n)</Label>
+                <Label Grid.Row="1" Grid.Column="0">Waktu Satu Kali Move (s)</Label>
+                <Label Grid.Row="2" Grid.Column="0">Jumlah Pertandingan</Label>
+                <xctk:IntegerUpDown Name="jlhThread" Maximum="64" Value="2" Grid.Row="0" Grid.Column="1" Margin="4" />
+                <xctk:IntegerUpDown Name="wktMove" Maximum="120" Value="5" Grid.Row="1" Grid.Column="1" Margin="4"/>
+                <xctk:IntegerUpDown Name="jlhPertandingan" Maximum="400" Value="10" Grid.Row="2" Grid.Column="1" Margin="4"/>
+                <Label Grid.Row="0" Grid.Column="2">Nilai bias SR</Label>
+                <Label Grid.Row="1" Grid.Column="2">Nilai bias CR</Label>
+                <xctk:DoubleUpDown Name="nilaiCR" Maximum="10" Value="0.75" Grid.Row="1" Grid.Column="3" Margin="4" />
+                <xctk:DoubleUpDown Name="nilaiSR" Maximum="10" Value="0.75" Grid.Row="0" Grid.Column="3" Margin="4" />
+                <Label Grid.Row="0" Grid.Column="4">Nilai Konstanta Positif SSAB</Label>
+                <Label Grid.Row="1" Grid.Column="4">Jumlah Simulasi PGL</Label>
+                <xctk:DoubleUpDown Name="nilaiSSAB" Maximum="10" Value="0.01" Grid.Row="0" Grid.Column="5" Margin="4"/>
+                <xctk:IntegerUpDown Name="nilaiPGL" Maximum="1000" Value="500" Grid.Row="1" Grid.Column="5" Margin="4"/>
+                <RadioButton IsChecked="True"  Name="radioCR" Grid.Row="0" Grid.Column="6" Content="Fungsi Evaluasi CR" VerticalAlignment="Center" Margin="4"/>
+                <RadioButton Name="radioSRCR" Grid.Row="1" Grid.Column="6" Content="Fungsi Evaluasi CR + SR" VerticalAlignment="Center" Margin="4"/>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0"  BorderBrush="Black" Margin="10" CornerRadius="5" BorderThickness="1">
+                <StackPanel Margin="5" >
+                    <TextBlock TextWrapping="WrapWithOverflow" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" >Root Parallelization</TextBlock>
+                    <Button Padding="20" Margin="0 20 0 0" Click="onClick_RP">Self-Play n with n/2</Button>
+                </StackPanel>
+            </Border>
+
+            <Border  Grid.Column="1" BorderBrush="Black" Margin="10" CornerRadius="5" BorderThickness="1">
+                <StackPanel Margin="5">
+                    <TextBlock TextWrapping="WrapWithOverflow" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" >Tree Parallelization Using Local Mutex</TextBlock>
+                    <Button Padding="20" Margin="0 20 0 0" Click="onClick_TPLM">Self-Play n with n/2</Button>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2" BorderBrush="Black" Margin="10" CornerRadius="5" BorderThickness="1">
+                <StackPanel Margin="5" >
+                    <TextBlock TextWrapping="WrapWithOverflow" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" >Tree Parallelization Using Local Mutex And Virtual Loss</TextBlock>
+                    <Button Padding="20" Margin="0 20 0 0" Click="onClick_TPLMVL">Self-Play n with n/2</Button>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="2" Height="250" Margin="10">
+            <DataGrid Name="dg" >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Permainan-ke" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Hasil Permainan" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Banyaknya simulasi" IsReadOnly="True"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Border BorderBrush="Black" Margin="10" CornerRadius="5" BorderThickness="1">
+                <TextBox IsReadOnly="True" Name="txtRP"></TextBox>
+            </Border>
+            <Border  Grid.Column="1" BorderBrush="Black" Margin="10" CornerRadius="5" BorderThickness="1">
+                <TextBox IsReadOnly="True" Name="txtTPLM"></TextBox>
+            </Border>
+            <Border Grid.Column="2" BorderBrush="Black" Margin="10" CornerRadius="5" BorderThickness="1">
+                <TextBox IsReadOnly="True" Name="txtTPLMVL"></TextBox>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

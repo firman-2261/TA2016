@@ -18,13 +18,16 @@
             <MenuItem Header="Game">
                 <MenuItem Header="Human Vs Human" Click="menuHumanVsHuman_Click"/>
                 <MenuItem Header="Human Vs Computer" Click="menuHumanVsComp_Click"/>
-                <MenuItem Header="Exit" Click="menuKeluar_Click"/>
             </MenuItem>
             <MenuItem Header="Experiment" Click="menuPengujian_Click">
             </MenuItem>
-            <MenuItem Header="View" Click="menuView_Click"></MenuItem>
+            <MenuItem Header="View" >
+                <MenuItem Header="Options" Click="menuOptions_Click"/>
+                <MenuItem Header="Output" Click="menuOutput_Click"/>
+            </MenuItem>
             <MenuItem Header="Help" Click="menuBantuan_Click"></MenuItem>
             <MenuItem Header="About Us" Click="menuTentangKami_Click"></MenuItem>
+            <MenuItem Header="Exit" Click="menuKeluar_Click"/>
         </Menu>
 
         <ad:DockingManager x:Name="dockManager" Grid.Row="1">
@@ -34,11 +37,12 @@
             <ad:LayoutRoot>
                 <ad:LayoutPanel Orientation="Horizontal">
                      <ad:LayoutDocumentPane>
-                        <ad:LayoutDocument Title="Game" x:Name="game">
+                        <ad:LayoutDocument Title="Game" x:Name="game" CanClose="False">
                         </ad:LayoutDocument>
-                     </ad:LayoutDocumentPane>
+                        <ad:LayoutDocument  Title="Experiment" x:Name="pengujian" CanClose="False"/>
+                    </ad:LayoutDocumentPane>
                     <ad:LayoutAnchorablePane DockWidth="300">
-                        <ad:LayoutAnchorable Title="Output" FloatingWidth="300" FloatingHeight="650" AutoHideWidth="300">
+                        <ad:LayoutAnchorable x:Name="output" Title="Output" FloatingWidth="300" FloatingHeight="650" AutoHideWidth="300">
                             <TextBox Name="txtTempatInformasi" IsReadOnly="true" TextWrapping="Wrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
                          
                         </ad:LayoutAnchorable>
@@ -47,7 +51,7 @@
                 <ad:LayoutRoot.LeftSide >
                     <ad:LayoutAnchorSide>
                         <ad:LayoutAnchorGroup>
-                            <ad:LayoutAnchorable  Title="Options" FloatingWidth="300" FloatingHeight="650" AutoHideWidth="300">
+                            <ad:LayoutAnchorable  x:Name="options" Title="Options" FloatingWidth="300" FloatingHeight="650" AutoHideWidth="300">
                                 <xctk:PropertyGrid x:Name="_propertyGrid"  PropertyValueChanged="_propertyGrid_PropertyValueChanged" PreparePropertyItem="_propertyGrid_PreparePropertyItem"></xctk:PropertyGrid>
                             </ad:LayoutAnchorable>
                         </ad:LayoutAnchorGroup>

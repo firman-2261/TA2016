@@ -26,7 +26,8 @@ namespace View
         {
             InitializeComponent();
             _propertyGrid.SelectedObject = new Settings();
-            game.Content = new GameCDC(this,TOURNAMENT.HUMAN_VS_COMPUTER);
+            game.Content = new GameCDC(this, TOURNAMENT.HUMAN_VS_COMPUTER);
+            pengujian.Content = new Experiment();
             this.tournament.Content = "Human Vs Computer";
         }
         private void menuHumanVsHuman_Click(object sender, RoutedEventArgs e)
@@ -46,16 +47,18 @@ namespace View
 
         private void menuPengujian_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Sedang Dibuat");
-            
+            pengujian.Content = new Experiment();
         }
 
-        private void menuView_Click(object sender, RoutedEventArgs e)
+        private void menuOptions_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Sedang Dibuat");
+            this.options.Show();
         }
 
-
+        private void menuOutput_Click(object sender, RoutedEventArgs e)
+        {
+            this.output.Show();
+        }
         private void menuBantuan_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Tunggu Robin");

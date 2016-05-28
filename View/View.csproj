@@ -80,11 +80,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Experiment.xaml.cs">
+      <DependentUpon>Experiment.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="GameCDC.xaml.cs">
       <DependentUpon>GameCDC.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utility.cs" />
+    <Page Include="Experiment.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GameCDC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
