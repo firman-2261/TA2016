@@ -10,13 +10,14 @@ namespace NMCTS
     public class NondeterministicNode:Node
     {
         public List<double> dp;
-        public Node selected;
-        public Node[] children;
+        public Node selected { set; get; }
+        public Node[] children { set; get; }
 
         public NondeterministicNode(List<double> dp,Move action)
         {
             this.dp = dp;
             this.action = action;
+            this.name = Constant.NONDETERMINISTIC_NODE;
         }
 
         public override Node select()
@@ -56,7 +57,7 @@ namespace NMCTS
                         {
                             BoardState tmpBoardState = tmpSelected.board.getBoardState();
                             tmpSelected.board.move(action.from.row, action.from.column, action.to[x].row, action.to[x].column);
-                            tmpSelected.children[i] = new DeterministicNode(tmpSelected.board.getBoardState(), new Move(action.from, action.to[x]));
+                            tmpSelected.children[i] = new DeterministicNode(tmpSelected.board.getBoardState(), new Move(action.from, action.to[x]),Constant.NONE,Constant.NONE);
                             tmpSelected.board.restoreBoardState(tmpBoardState);
                         }
                     }
@@ -71,7 +72,7 @@ namespace NMCTS
                             Position tmpPosition = tmpSelected.board.getFlippedPositionByPiece(action.piece[x]);//temukan real position
                             tmpSelected.board.switchFlippedPieceByPosition(tmpPosition.row, tmpPosition.column, action.position.row, action.position.column);//pindahkan dari real position ke position yang diinginkan
                             tmpSelected.board.flip(action.position.row, action.position.column); //buka piece
-                            tmpNode.children[x] = new DeterministicNode(tmpSelected.board.getBoardState(), new Move(action.position, action.position));
+                            tmpNode.children[x] = new DeterministicNode(tmpSelected.board.getBoardState(), new Move(action.position, action.position),action.piece[x],action.probability[x]);
                             tmpSelected.board.restoreBoardState(tmpBoardState);
                         }
                         tmpSelected.children[i] = tmpNode;
@@ -87,7 +88,7 @@ namespace NMCTS
                 tn = select();
                 
             }
-            DeterministicNode tmp = new DeterministicNode(((DeterministicNode)((NondeterministicNode)tn).selected).board.getBoardState(),null);
+            DeterministicNode tmp = new DeterministicNode(((DeterministicNode)((NondeterministicNode)tn).selected).board.getBoardState(),null,Constant.NONE,Constant.NONE);
             
             while (tmp.board.isEnd() == END_STATE.CONTINUE)
             {
@@ -128,7 +129,7 @@ namespace NMCTS
             this.selected.nVisits += 1;
             this.selected.winRate = this.selected.winRate + value + (d * (PGL - s));
             this.nVisits += 1;
-            this.winRate += this.selected.winRate + value + (d * (PGL - s));
+            this.winRate += this.selected.winRate;
         }
         public override bool isLeaf()
         {

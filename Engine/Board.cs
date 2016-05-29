@@ -933,22 +933,25 @@ namespace Engine
                     if (!this.isPositionEmpty(i, j))
                     {
                         //Pastikan terlebih dahulu bidak pada posisi tersebut merupakan bidak kawan
-                        if (isSameSide(this.array[i, j], this.sideToMove))
-                        {
-                            if (!isPositionEmpty(i, j))
-                            {
+                        //if (isSameSide(this.array[i, j], this.sideToMove))
+                        //{
+                            //if (!isPositionEmpty(i, j))
+                            //{
                                 //PASTIKAN TERLEBIH DAHULU APAKAH BIDAK TERSEBUT SUDAH TERBUKA
                                 if (isFlipped(i, j))
                                 {
-                                    totalAksi += generateMove(i, j).Count;
+                                    if (isSameSide(this.array[i, j], this.sideToMove))
+                                    {
+                                        totalAksi += generateMove(i, j).Count;
+                                    }
                                 }
                                 //kalau belum dibuka, maka langsung tambahkan
                                 else
                                 {
                                     totalAksi++;
                                 }
-                            }
-                        }
+                            //}
+                        //}
                     }
                 }
             }
@@ -971,18 +974,21 @@ namespace Engine
                     if (!isPositionEmpty(i, j))
                     {
                         //Pastikan terlebih dahulu bidak pada posisi tersebut merupakan bidak kawan
-                        if (isSameSide(this.array[i, j], this.sideToMove))
-                        {
+                        //if (isSameSide(this.array[i, j], this.sideToMove))
+                        //{
                             if (!isPositionEmpty(i, j))
                             {
                                 //PASTIKAN TERLEBIH DAHULU APAKAH BIDAK TERSEBUT SUDAH TERBUKA
                                 if (isFlipped(i, j))
                                 {
-                                    List<Position> move = generateMove(i, j);
-                                    if (move.Count!=0)
+                                    if (isSameSide(this.array[i, j], this.sideToMove))
                                     {
-                                        DeterministicActions de = new DeterministicActions(new Position(i, j), move, ACTION.MOVE);
-                                        tmp.Add(de);
+                                        List<Position> move = generateMove(i, j);
+                                        if (move.Count != 0)
+                                        {
+                                            DeterministicActions de = new DeterministicActions(new Position(i, j), move, ACTION.MOVE);
+                                            tmp.Add(de);
+                                        }
                                     }
                                 }
                                 //kalau belum dibuka, maka hitung distribusi flipping
@@ -995,7 +1001,7 @@ namespace Engine
                                     }
                                 }
                             }
-                        }
+                        //}
                     }
                 }
             }

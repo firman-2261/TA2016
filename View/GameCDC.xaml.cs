@@ -273,36 +273,34 @@ namespace View
                 changeDisable();
                 if (this.tournament == TOURNAMENT.HUMAN_VS_COMPUTER)
                 {
-                    Thread timer = new Thread(() =>
-           {
-               Thread.Sleep(1000);
-               this.Dispatcher.Invoke((Action)(() =>
-               {//jalankan
-                   setPGLValue();
-                   DeterministicNode b = new DeterministicNode(this.logicalCDC.getBoardState(), null);
-                   for (int i = 0; i < 1000; i++)
-                   {
-                       //Console.WriteLine(i);
-                       b.selectAction();
-                       //Console.WriteLine(i);
-                   }
-                   Node maxWinRate = b.children[0];
-                   for (int i = 1; i < b.children.Length; i++)
-                   {
-                       if (maxWinRate.winRate <= b.children[i].winRate)
-                       {
-                           maxWinRate = b.children[i];
-                       }
-                   }
+                    Thread timer = new Thread(() =>{
+                        Thread.Sleep(1000);
+                        setPGLValue();
+                        DeterministicNode b = new DeterministicNode(this.logicalCDC.getBoardState(), null,Constant.NONE,Constant.NONE);
+                           for (int i = 0; i < 10; i++)
+                           {
+                               //Console.WriteLine(i);
+                               b.selectAction();
+                               //Console.WriteLine(i);
+                           }
+                           Node maxWinRate = b.children[0];
+                           for (int i = 1; i < b.children.Length; i++)
+                           {
+                               if (maxWinRate.winRate <= b.children[i].winRate)
+                               {
+                                   maxWinRate = b.children[i];
+                               }
+                           }
 
-                   moveByCoding(maxWinRate.action.from, maxWinRate.action.to);
-                   //switchTurn();
-               }));
+                           this.Dispatcher.Invoke((Action)(() =>
+                           {//jalankan
+                               moveByCoding(maxWinRate.action.from, maxWinRate.action.to);
 
-
-           });
-                  
-                    timer.Start();
+                               main.tree.Content = new Tree(b);
+                               //switchTurn();
+                           }));
+                   });
+                   timer.Start();
                 }
             }
         }
@@ -310,14 +308,14 @@ namespace View
         public void setPGLValue()
         {
             DeterministicNode.side = this.logicalCDC.sideToMove;
-            DeterministicNode b = new DeterministicNode(this.logicalCDC.getBoardState(), null);
+            DeterministicNode b = new DeterministicNode(this.logicalCDC.getBoardState(), null,Constant.NONE,Constant.NONE);
             double x = 0;
-            for (int i = 0; i < 500; i++)
+            for (int i = 0; i < 5; i++)
             {
                 b.selectAction();
                 x += Node.s;
             }
-            Node.PGL = x / 500;
+            Node.PGL = x / 5;
         }
 
         private void onClick(object obj, RoutedEventArgs e)
@@ -749,19 +747,26 @@ namespace View
         private void addSisaPiece(Brush foreground, object Content)
         {
             //this.logicalCDC.getCountTakenPieces ditambah 1 karena logicalCDC move duluan, sehingga akan menyebabkan Index out of range
-            sisaPieceBlack = new Position(0, (Constant.COLUMN* 2) - (this.logicalCDC.getCountTakenPiecesBlack()+1));
-            sisaPieceRed = new Position(1, (Constant.COLUMN * 2) - (this.logicalCDC.getCountTakenPiecesRed()+1));
-            int tmpRow, tmpColumn;
+            //sisaPieceBlack = new Position(0, (Constant.COLUMN* 2) - (this.logicalCDC.getCountTakenPiecesBlack()+1));
+            //sisaPieceRed = new Position(1, (Constant.COLUMN * 2) - (this.logicalCDC.getCountTakenPiecesRed()+1));
+            
+            int tmpRow, tmpColumn = 0;
 
             if (foreground == Brushes.Black)
             {
-                tmpRow = sisaPieceBlack.row;
-                tmpColumn = sisaPieceBlack.column - 1;
+                tmpRow = 0;
             }
             else
             {
-                tmpRow = sisaPieceRed.row;
-                tmpColumn = sisaPieceRed.column - 1;
+                tmpRow = 1;
+            }
+
+            for (int i = 0; i < (Constant.COLUMN * 2); i++)
+            {
+                if (sisaPieces[tmpRow, i] == null)
+                {
+                    tmpColumn = i;
+                }
             }
 
             sisaPieces[tmpRow, tmpColumn] = new Button();

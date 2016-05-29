@@ -43,8 +43,10 @@
                     </ad:LayoutDocumentPane>
                     <ad:LayoutAnchorablePane DockWidth="300">
                         <ad:LayoutAnchorable x:Name="output" Title="Output" FloatingWidth="300" FloatingHeight="650" AutoHideWidth="300">
-                            <TextBox Name="txtTempatInformasi" IsReadOnly="true" TextWrapping="Wrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
-                         
+                            <TextBox Background="BlanchedAlmond" Name="txtTempatInformasi" IsReadOnly="true" TextWrapping="Wrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                        </ad:LayoutAnchorable>
+                        <ad:LayoutAnchorable x:Name="tree" Title="Tree" FloatingWidth="300" FloatingHeight="650" AutoHideWidth="300">
+                            
                         </ad:LayoutAnchorable>
                     </ad:LayoutAnchorablePane>
                 </ad:LayoutPanel>

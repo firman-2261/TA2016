@@ -38,6 +38,9 @@ namespace Engine
         public const int CANNON_SCORE = 3000;
         public const int PAWN_SCORE = 800;
 
+        public const byte DETERMINISTIC_NODE = 0;
+        public const byte NONDETERMINISTIC_NODE = 1;
+
         public static Dictionary<byte, Position> indexMapping = new Dictionary<byte, Position>()
         {
            {0, new Position(0,0)}, {1, new Position(0,1)}, {2, new Position(0,2)}, {3, new Position(0,3)}, {4, new Position(0,4)}, {5, new Position(0,5)}, {6, new Position(0,6)}, {7, new Position(0,7)},

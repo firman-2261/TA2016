@@ -11,13 +11,14 @@ namespace NMCTS
     {
         public List<double> dp;
         public Node selected;
-        public Node[] children;
+        public Node[] children { set; get; }
 
         public NondeterministicNode(List<double> dp,Move action,NODE type)
         {
             this.dp = dp;
             this.action = action;
             this.type = type;
+            this.name = Constant.NONDETERMINISTIC_NODE;
         }
 
         public override Node select()
@@ -138,7 +139,7 @@ namespace NMCTS
             this.selected.nVisits += 1;
             this.selected.winRate = ((this.selected.winRate * this.selected.nVisits) + (value + (d * (PGL - s))) / (this.selected.nVisits + 1));
             this.nVisits += 1;
-            this.winRate += ((this.winRate * this.nVisits) + (value + (d * (PGL - s))) / (this.nVisits + 1));
+            this.winRate += this.selected.winRate;
         }
         public override bool isLeaf()
         {

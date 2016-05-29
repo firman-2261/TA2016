@@ -17,7 +17,14 @@ namespace Engine
 
         public override string ToString()
         {
-            return ("from : " + from.row + "," + from.column + " to : " + to.row + "," + to.column );
+            if (from.row == to.row && from.column == to.column)
+            {
+                return "Flip("+from.row+","+from.column+")";
+            }
+            else
+            {
+                return "(" + from.row + "," + from.column +")-(" + to.row + "," + to.column+")";
+            }
         }
     }
 }

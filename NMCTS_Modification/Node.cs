@@ -17,9 +17,11 @@ namespace NMCTS
         public static double PGL;
         public static double s;
 
-        public double nVisits, winRate;
+        public double nVisits { set; get; }
+        public double winRate { set; get; }
         public Move action;
         public NODE type;
+        public byte name { set; get; }
         public virtual bool isLeaf() { return true; }
         public virtual Node select() { return null; }
 

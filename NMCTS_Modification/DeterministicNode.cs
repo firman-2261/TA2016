@@ -9,7 +9,7 @@ namespace NMCTS
 {
     public class DeterministicNode:Node
     {
-        public Node[] children;
+        public Node[] children { set; get; }
         
         public Board board;
 
@@ -18,6 +18,7 @@ namespace NMCTS
             this.board = new Board(state);
             this.action = action;
             this.type = type;
+            this.name = Constant.DETERMINISTIC_NODE;
         }
         public void selectAction()
         {

@@ -106,9 +106,9 @@ namespace Testing
            
             a.flip(0,0);
             DeterministicNode.side = a.sideToMove;
-            DeterministicNode b = new DeterministicNode(a.getBoardState(),null);
+            DeterministicNode b = new DeterministicNode(a.getBoardState(),null,Constant.NONE,Constant.NONE);
             double x=0;
-            for (int i = 0; i <500; i++)
+            for (int i = 0; i <240000; i++)
             {
                 //Console.WriteLine(i);
                 b.selectAction();

@@ -9,14 +9,20 @@ namespace NMCTS
 {
     public class DeterministicNode:Node
     {
-        public Node[] children;
+        public Node[] children { set; get; }
         
         public Board board;
 
-        public DeterministicNode(BoardState state,Move action)
+        public int piece { set; get; }
+        public double probability { set; get; }
+
+        public DeterministicNode(BoardState state,Move action,int piece,double probability)
         {
             this.board = new Board(state);
             this.action = action;
+            this.name = Constant.DETERMINISTIC_NODE;
+            this.piece = piece;
+            this.probability = probability;
         }
         public void selectAction()
         {
@@ -85,7 +91,7 @@ namespace NMCTS
                         {
                             BoardState tmpBoardState = this.board.getBoardState();
                             this.board.move(action.from.row, action.from.column, action.to[x].row, action.to[x].column);
-                            children[index] = new DeterministicNode(this.board.getBoardState(), new Move(action.from, action.to[x]));
+                            children[index] = new DeterministicNode(this.board.getBoardState(), new Move(action.from, action.to[x]),Constant.NONE,Constant.NONE);
                             this.board.restoreBoardState(tmpBoardState);
                             index++;
                         }
@@ -102,7 +108,7 @@ namespace NMCTS
                             Position tmpPosition = this.board.getFlippedPositionByPiece(action.piece[x]);//temukan real position
                             this.board.switchFlippedPieceByPosition(tmpPosition.row, tmpPosition.column, action.position.row, action.position.column);//pindahkan dari real position ke position yang diinginkan
                             this.board.flip(action.position.row, action.position.column); //buka piece
-                            tmpNode.children[x] = new DeterministicNode(this.board.getBoardState(), new Move(action.position, action.position));
+                            tmpNode.children[x] = new DeterministicNode(this.board.getBoardState(), new Move(action.position, action.position),action.piece[x],action.probability[x]);
                             this.board.restoreBoardState(tmpBoardState);
                         }
                         children[index] = tmpNode;
@@ -155,7 +161,7 @@ namespace NMCTS
 
         public override double rollOut(Node tn,long length)
         {
-            DeterministicNode tmp = new DeterministicNode(((DeterministicNode)tn).board.getBoardState(),null);
+            DeterministicNode tmp = new DeterministicNode(((DeterministicNode)tn).board.getBoardState(),null,Constant.NONE,Constant.NONE);
             while (tmp.board.isEnd() == END_STATE.CONTINUE)
             {
                 s += 1;
