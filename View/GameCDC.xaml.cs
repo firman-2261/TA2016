@@ -262,45 +262,77 @@ namespace View
 
         private void switchTurn()
         {
-            if (this.currentTurn == PLAYER.COMPUTER)
+            END_STATE tmpResult = this.logicalCDC.isEnd();
+            if (tmpResult == END_STATE.BLACK_WIN)
             {
-                this.currentTurn = PLAYER.HUMAN;
-                changeDisable();
+                //MAINKAN SUARANYA
+                if (Properties.Settings.Default["Sound"].ToString() == "Enable")
+                {
+                    Player.Open(new Uri(@"PindahPiece\" + Properties.Settings.Default["EndingSound"].ToString() + ".wav", UriKind.RelativeOrAbsolute));
+                    Player.Play();
+                }
+                MessageBox.Show("BLACK WIN");
+                main.newGame();
+
+            }
+            else if (tmpResult == END_STATE.RED_WIN)
+            {
+                //MAINKAN SUARANYA
+                if (Properties.Settings.Default["Sound"].ToString() == "Enable")
+                {
+                    Player.Open(new Uri(@"PindahPiece\" + Properties.Settings.Default["EndingSound"].ToString() + ".wav", UriKind.RelativeOrAbsolute));
+                    Player.Play();
+                }
+                MessageBox.Show("RED WIN");
+                main.newGame();
+            }
+            else if (tmpResult == END_STATE.DRAW)
+            {
+                //MAINKAN SUARANYA
+                if (Properties.Settings.Default["Sound"].ToString() == "Enable")
+                {
+                    Player.Open(new Uri(@"PindahPiece\" + Properties.Settings.Default["EndingSound"].ToString() + ".wav", UriKind.RelativeOrAbsolute));
+                    Player.Play();
+                }
+                MessageBox.Show("DRAW");
+                main.newGame();
             }
             else
             {
-                this.currentTurn = PLAYER.COMPUTER;
-                changeDisable();
-                if (this.tournament == TOURNAMENT.HUMAN_VS_COMPUTER)
+
+                if (this.currentTurn == PLAYER.COMPUTER)
                 {
-                    Thread timer = new Thread(() =>{
-                        Thread.Sleep(1000);
-                        setPGLValue();
-                        DeterministicNode b = new DeterministicNode(this.logicalCDC.getBoardState(), null,Constant.NONE,Constant.NONE);
-                           for (int i = 0; i < 10; i++)
-                           {
-                               //Console.WriteLine(i);
-                               b.selectAction();
-                               //Console.WriteLine(i);
-                           }
-                           Node maxWinRate = b.children[0];
-                           for (int i = 1; i < b.children.Length; i++)
-                           {
-                               if (maxWinRate.winRate <= b.children[i].winRate)
-                               {
-                                   maxWinRate = b.children[i];
-                               }
-                           }
+                    this.currentTurn = PLAYER.HUMAN;
+                    changeDisable();
+                }
+                else
+                {
+                    this.currentTurn = PLAYER.COMPUTER;
+                    changeDisable();
+                    if (this.tournament == TOURNAMENT.HUMAN_VS_COMPUTER)
+                    {
+                        Thread timer = new Thread(() =>
+                        {
+                            Thread.Sleep(10);
+                            setPGLValue();
+                            DeterministicNode b = new DeterministicNode(this.logicalCDC.getBoardState(), null, Constant.NONE, Constant.NONE);
+                            for (int i = 0; i < 10; i++)
+                            {
+                                //Console.WriteLine(i);
+                                b.selectAction();
+                                //Console.WriteLine(i);
+                            }
+                            Node maxWinRate = b.getSelectedNode();
+                            this.Dispatcher.Invoke((Action)(() =>
+                            {//jalankan
+                                moveByCoding(maxWinRate.action.from, maxWinRate.action.to);
 
-                           this.Dispatcher.Invoke((Action)(() =>
-                           {//jalankan
-                               moveByCoding(maxWinRate.action.from, maxWinRate.action.to);
-
-                               main.tree.Content = new Tree(b);
-                               //switchTurn();
-                           }));
-                   });
-                   timer.Start();
+                                main.tree.Content = new Tree(b);
+                                //switchTurn();
+                            }));
+                        });
+                        timer.Start();
+                    }
                 }
             }
         }
@@ -603,38 +635,6 @@ namespace View
                 addSisaPiece(this.pieces[from.row, from.column].Foreground, this.pieces[from.row, from.column].Content);
 
                 this.pieces[from.row, from.column].Opacity = 0;
-            }
-            END_STATE tmpResult = this.logicalCDC.isEnd();
-            if (tmpResult == END_STATE.BLACK_WIN)
-            {
-                //MAINKAN SUARANYA
-                if (Properties.Settings.Default["Sound"].ToString() == "Enable")
-                {
-                    Player.Open(new Uri(@"PindahPiece\" + Properties.Settings.Default["EndingSound"].ToString() + ".wav", UriKind.RelativeOrAbsolute));
-                    Player.Play();
-                }
-                MessageBox.Show("BLACK WIN");
-
-            }
-            else if (tmpResult == END_STATE.RED_WIN)
-            {
-                //MAINKAN SUARANYA
-                if (Properties.Settings.Default["Sound"].ToString() == "Enable")
-                {
-                    Player.Open(new Uri(@"PindahPiece\" + Properties.Settings.Default["EndingSound"].ToString() + ".wav", UriKind.RelativeOrAbsolute));
-                    Player.Play();
-                }
-                MessageBox.Show("RED WIN");
-            }
-            else if (tmpResult == END_STATE.DRAW)
-            {
-                //MAINKAN SUARANYA
-                if (Properties.Settings.Default["Sound"].ToString() == "Enable")
-                {
-                    Player.Open(new Uri(@"PindahPiece\" + Properties.Settings.Default["EndingSound"].ToString() + ".wav", UriKind.RelativeOrAbsolute));
-                    Player.Play();
-                }
-                MessageBox.Show("DRAW");
             }
 
         }
