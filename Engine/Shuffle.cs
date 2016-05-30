@@ -104,15 +104,7 @@ namespace Engine
         public static int rouletteSelect(List<double> weight)
         {
             double[] cumulative;
-            double weight_sum = 0;
             double previous_probability = 0.0;
-
-            //hitung total probabilitas
-            for (int i = 0; i < weight.Count; i++)
-            {
-                weight_sum += weight[i];
-            }
-            //Console.WriteLine(weight_sum);
 
             //jadikan kumulatif
             cumulative = new double[weight.Count];
@@ -122,21 +114,16 @@ namespace Engine
                 previous_probability += weight[i];
             }
 
-            /*foreach (double x in cumulative)
-            {
-                Console.WriteLine(x);
-            }*/
 
-            // dapatkan nilai random
-            double value = rnd.NextDouble() * weight_sum;
-            //Console.WriteLine(value);
-            // search posisi niddle
-            for (int i = 0; i < weight.Count; i++)
+            double value = rnd.NextDouble();
+            for (int i = 0; i < (weight.Count-1); i++)
             {
-                value -= cumulative[i];
-                if (value <= 0) return i;
+                if (value >= cumulative[i] && value <= cumulative[i + 1])
+                {
+                    return i;
+                }
             }
-            //error
+
             return weight.Count - 1;
         }
     }
