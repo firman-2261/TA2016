@@ -37,7 +37,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>logo.ico</ApplicationIcon>
+    <ApplicationIcon>Gambar\logo.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -101,14 +101,14 @@
     <Compile Include="Experiment.xaml.cs">
       <DependentUpon>Experiment.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings.cs" />
+    <Compile Include="Library\Settings.cs" />
     <Compile Include="GameCDC.xaml.cs">
       <DependentUpon>GameCDC.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tree.xaml.cs">
       <DependentUpon>Tree.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Utility.cs" />
+    <Compile Include="Library\Utility.cs" />
     <Page Include="Experiment.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -125,7 +125,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Focus.cs" />
+    <Compile Include="Library\Focus.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -168,13 +168,28 @@
       <Project>{f6d096b8-4675-47f9-b701-ab741d2b5f50}</Project>
       <Name>Engine</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Experiment\Experiment.csproj">
+      <Project>{eb200a06-1d1f-48fc-accb-69e02e887f9f}</Project>
+      <Name>Experiment</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyParallel\MyParallel.csproj">
+      <Project>{507db411-134f-4724-9769-3410d7283ef4}</Project>
+      <Name>MyParallel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NMCTS\NMCTS.csproj">
       <Project>{6aea058d-e07b-4e21-8f0c-33e5b67779d1}</Project>
       <Name>NMCTS</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Testing\Testing.csproj">
+      <Project>{59023197-1b30-4bab-9b51-b5595e55e9b7}</Project>
+      <Name>Testing</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="logo.ico" />
+    <Resource Include="Gambar\logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Library\Experiment\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

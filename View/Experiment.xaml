@@ -37,7 +37,7 @@
                 <Label Grid.Row="0" Grid.Column="0">Jumlah Paralel Thread (n)</Label>
                 <Label Grid.Row="1" Grid.Column="0">Waktu Satu Kali Move (s)</Label>
                 <Label Grid.Row="2" Grid.Column="0">Jumlah Pertandingan</Label>
-                <xctk:IntegerUpDown Name="jlhThread" Maximum="64" Value="2" Grid.Row="0" Grid.Column="1" Margin="4" />
+                <xctk:IntegerUpDown Name="jlhThread" Maximum="64" Minimum="2" Value="2" Grid.Row="0" Grid.Column="1" Margin="4" Increment="2" />
                 <xctk:IntegerUpDown Name="wktMove" Maximum="120" Value="5" Grid.Row="1" Grid.Column="1" Margin="4"/>
                 <xctk:IntegerUpDown Name="jlhPertandingan" Maximum="400" Value="10" Grid.Row="2" Grid.Column="1" Margin="4"/>
                 <Label Grid.Row="0" Grid.Column="2">Nilai bias SR</Label>
@@ -83,11 +83,11 @@
         </Grid>
 
         <Grid Grid.Row="2" Height="250" Margin="10">
-            <DataGrid Name="dg" >
+            <DataGrid Name="dg">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Permainan-ke" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Hasil Permainan" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Banyaknya simulasi" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="*"  Binding="{Binding permainanKe}" Header="Permainan-ke" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="*" Binding="{Binding hasilPermainan}"  Header="Hasil Permainan" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="*" Binding="{Binding jlhSimulasi}"  Header="Banyaknya simulasi" IsReadOnly="True"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

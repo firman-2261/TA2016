@@ -105,6 +105,15 @@ namespace Engine
         {
             double[] cumulative;
             double previous_probability = 0.0;
+            //double total = 0;
+            //for (int s = 0; s<weight.Count; s++)
+            //{
+            //    total += weight[s];
+            //}
+            //if (total != 1)
+            //{
+            //    Console.WriteLine("");
+            //}
 
             //jadikan kumulatif
             cumulative = new double[weight.Count];
@@ -125,6 +134,13 @@ namespace Engine
             }
 
             return weight.Count - 1;
+        }
+
+        public static Position getShufflePosition()
+        {
+            int row = Shuffle.rnd.Next(Constant.ROW);
+            int column = Shuffle.rnd.Next(Constant.COLUMN);
+            return new Position(row, column);
         }
     }
 }

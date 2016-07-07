@@ -4,23 +4,76 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Engine;
-
+using System.Diagnostics;
+using MyParallel;
 using System.Threading;
 using NMCTS;
+using SRCR = NMCTS_SR_CR;
+using SimpleTP = Experiment.SR.Tree;
+using SimpleTPVL = Experiment.SR.TreeVl;
 
 namespace Testing
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
+            //for (int i = 0; i < 1; i++)
+            //{
+            //    Console.WriteLine("ke-"+i);
+            //    List<double> tmp = new List<double>();
+            //    tmp.Add(0.12903225806451613);
+            //    tmp.Add(0.064516129032258063);
+            //    tmp.Add(0.032258064516129031);
+            //    tmp.Add(0.16129032258064516);
+            //    tmp.Add(0.064516129032258063);
+            //    tmp.Add(0.064516129032258063);
+            //    tmp.Add(0.064516129032258063);
+            //    tmp.Add(0.064516129032258063);
+            //    tmp.Add(0.064516129032258063);
+            //    tmp.Add(0.064516129032258063);
+            //    tmp.Add(0.064516129032258063);
+            //    tmp.Add(0.064516129032258063);
+            //    tmp.Add(0.032258064516129031);
+            //    tmp.Add(0.064516129032258063);
+            //    double total = 0;
+            //    for (int s = 0; s < 14; s++)
+            //    {
+            //        total += tmp[s];
+            //    }
+            //    int a = Shuffle.rouletteSelect(tmp);
+            //    Console.WriteLine(total);
+            //    if (a >= 14)
+            //    {
+            //        Console.WriteLine("errorr");
+            //    }
+            //}
+            testParallelSrVl();
+            //testParallelSSAB();
+            //consoleTesting();
+
+            //Stopwatch ti = new Stopwatch();
+            //Board b = new Board();
+            //b.flip(0, 0);
+            //SimpleTP.Node.side = b.sideToMove;
+            //ti.Start();
+            //SimpleTP.TreeParallelization a = new SimpleTP.TreeParallelization(60, 30, 1, b.getBoardState());
+            //SimpleTP.Node tmp = a.startNMCTS();
+            //ti.Stop();
+            //Console.WriteLine(ti.Elapsed.TotalSeconds);
+            //testParallelSSAB();
+            //testParallelProject();
+            //testBackpropagation();
+        //testWhileInParallel();
+            //testForInParallel();
+            //testParallelFor2();
             //testTimeSpan();
            // testRandomMove();
             //testCannonValidMove();
             //testBoardState();
                 //testProbabilityOfFlipping();
                 //testCannonValidMove();
-                testNMCTS();
+                //testNMCTS();
                 //Console.WriteLine(Board.getUInt64BinaryString(4611686018427387904));
                 //testSwitchFlippedPieceByPosition();
                 //switchArrayByRefOrByVal();
@@ -43,6 +96,525 @@ namespace Testing
                 //testGetLsb();
                 //testGetMsb();
                 Console.ReadKey();
+        }
+
+        static bool _lock=false;
+        static object _locker = new object();
+        static void testLock(object var)
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                _lock = true;
+                if (_lock)
+                {
+                    Thread.CurrentThread.Abort();
+                }
+                Console.WriteLine(var + " " + i);
+            }
+        }
+
+        static void consoleTestingSRCR()
+        {
+            Board logicalCDC = new Board();
+            logicalCDC.flip(3, 3);
+            SRCR.DeterministicNode.side = logicalCDC.sideToMove;
+            Console.WriteLine("\nsidetoMove : " + logicalCDC.sideToMove);
+            logicalCDC.flip(3, 4);
+            while (logicalCDC.isEnd() == END_STATE.CONTINUE)
+            {
+                Console.WriteLine("\nsidetoMove : " + logicalCDC.sideToMove);
+                SRCR.DeterministicNode a = new SRCR.DeterministicNode(logicalCDC.getBoardState(), null,NODE.NONE);
+                double x = 0;
+                for (int i = 0; i < 500; i++)
+                {
+                    a.selectAction();
+                    x += Node.s;
+                    //Console.WriteLine(Node.s);
+                }
+                Node.PGL = x / 500;
+
+                Console.WriteLine(Node.s);
+
+                Console.WriteLine("Mulai");
+                SRCR.DeterministicNode b = new SRCR.DeterministicNode(logicalCDC.getBoardState(), null, NODE.NONE);
+
+                for (int i = 0; i < 1000; i++)
+                {
+                    b.selectAction();
+                    Console.WriteLine(i);
+                }
+                Console.WriteLine("End");
+                SRCR.Node maxWinRate = b.children[0];
+                Console.WriteLine("0" + " , " + b.children[0].winRate + " , " + b.children[0].nVisits + " , " + b.children[0].action.from.ToString() + b.children[0].action.to.ToString());
+                for (int i = 1; i < b.children.Length; i++)
+                {
+                    Console.WriteLine(i + " , " + b.children[i].winRate + " , " + b.children[i].nVisits + " , " + b.children[i].action.from.ToString() + b.children[i].action.to.ToString());
+                    if (maxWinRate.winRate <= b.children[i].winRate)
+                    {
+                        maxWinRate = b.children[i];
+                    }
+                }
+
+                if (maxWinRate.action.from.row == maxWinRate.action.to.row && maxWinRate.action.from.column == maxWinRate.action.to.column)
+                {
+                    Console.WriteLine("Flip");
+                    Console.WriteLine("Posisi " + maxWinRate.action.from.ToString());
+                    Console.WriteLine("Sebelum");
+                    logicalCDC.printArrayStateFlip();
+                    logicalCDC.flip(maxWinRate.action.from.row, maxWinRate.action.from.column);
+
+                }
+                else
+                {
+                    Console.WriteLine("move");
+                    Console.WriteLine("From " + maxWinRate.action.from.ToString());
+                    Console.WriteLine("to " + maxWinRate.action.to.ToString());
+                    Console.WriteLine("Sebelum");
+                    logicalCDC.printArrayStateFlip();
+
+                    logicalCDC.move(maxWinRate.action.from.row, maxWinRate.action.from.column, maxWinRate.action.to.row, maxWinRate.action.to.column);
+                }
+                Console.WriteLine("Sesudah");
+                logicalCDC.printArrayStateFlip();
+
+
+                Console.WriteLine("\nsidetoMove : " + logicalCDC.sideToMove);
+                Console.WriteLine("Input Move (0,4,1,0) : ");
+                string move = Console.ReadLine();
+                string[] mymove = move.Split(',');
+                if (mymove.Length == 2)
+                {
+                    Console.WriteLine("Sebelum");
+                    logicalCDC.printArrayStateFlip();
+                    logicalCDC.flip(Convert.ToInt16(mymove[0]), Convert.ToInt16(mymove[1]));
+                }
+                else
+                {
+                    Console.WriteLine("Sebelum");
+                    logicalCDC.printArrayStateFlip();
+                    logicalCDC.move(Convert.ToInt16(mymove[0]), Convert.ToInt16(mymove[1]), Convert.ToInt16(mymove[2]), Convert.ToInt16(mymove[3]));
+                }
+                Console.WriteLine("Sesudah");
+                logicalCDC.printArrayStateFlip();
+                Console.WriteLine("Tekan Sembarangan key untuk lanjut");
+                Console.ReadKey();
+                System.GC.Collect();
+
+
+            }
+        }
+        static void consoleTesting()
+        {
+            Board logicalCDC = new Board();
+            logicalCDC.flip(3, 3);
+            DeterministicNode.side = logicalCDC.sideToMove;
+            Console.WriteLine("\nsidetoMove : " + logicalCDC.sideToMove);
+            logicalCDC.flip(3, 4);
+            while (logicalCDC.isEnd() == END_STATE.CONTINUE)
+            {
+                Console.WriteLine("\nsidetoMove : " + logicalCDC.sideToMove);
+                DeterministicNode a = new DeterministicNode(logicalCDC.getBoardState(), null, Constant.NONE, Constant.NONE);
+                //double x = 0;
+                //for (int i = 0; i < 500; i++)
+                //{
+                //    a.selectAction();
+                //    x += Node.s;
+                //    //Console.WriteLine(Node.s);
+                //}
+                //Node.PGL = x / 500;
+                Node.PGL = 0;
+
+                Console.WriteLine(Node.s);
+
+                Console.WriteLine("Mulai");
+                DeterministicNode b = new DeterministicNode(logicalCDC.getBoardState(), null, Constant.NONE, Constant.NONE);
+
+                for (int i = 0; i < 5000; i++)
+                {
+                    b.selectAction();
+                    Console.WriteLine(i);
+                }
+                Console.WriteLine("End");
+                Node maxWinRate = b.children[0];
+                Console.WriteLine("0" + " , " + b.children[0].winRate + " , " + b.children[0].nVisits + " , " + b.children[0].action.from.ToString() + b.children[0].action.to.ToString());
+                for (int i = 1; i < b.children.Length; i++)
+                {
+                    Console.WriteLine(i + " , " + b.children[i].winRate + " , " + b.children[i].nVisits + " , " + b.children[i].action.from.ToString() + b.children[i].action.to.ToString());
+                    if (maxWinRate.winRate <= b.children[i].winRate)
+                    {
+                        maxWinRate = b.children[i];
+                    }
+                }
+
+                if (maxWinRate.action.from.row == maxWinRate.action.to.row && maxWinRate.action.from.column == maxWinRate.action.to.column)
+                {
+                    Console.WriteLine("Flip");
+                    Console.WriteLine("Posisi " + maxWinRate.action.from.ToString());
+                    Console.WriteLine("Sebelum");
+                    logicalCDC.printArrayStateFlip();
+                    logicalCDC.flip(maxWinRate.action.from.row, maxWinRate.action.from.column);
+
+                }
+                else
+                {
+                    Console.WriteLine("move");
+                    Console.WriteLine("From " + maxWinRate.action.from.ToString());
+                    Console.WriteLine("to " + maxWinRate.action.to.ToString());
+                    Console.WriteLine("Sebelum");
+                    logicalCDC.printArrayStateFlip();
+
+                    logicalCDC.move(maxWinRate.action.from.row, maxWinRate.action.from.column, maxWinRate.action.to.row, maxWinRate.action.to.column);
+                }
+                Console.WriteLine("Sesudah");
+                logicalCDC.printArrayStateFlip();
+
+
+                Console.WriteLine("\nsidetoMove : " + logicalCDC.sideToMove);
+                Console.WriteLine("Input Move (0,4,1,0) : ");
+                string move = Console.ReadLine();
+                string[] mymove = move.Split(',');
+                if (mymove.Length == 2)
+                {
+                    Console.WriteLine("Sebelum");
+                    logicalCDC.printArrayStateFlip();
+                    logicalCDC.flip(Convert.ToInt16(mymove[0]), Convert.ToInt16(mymove[1]));
+                }
+                else
+                {
+                    Console.WriteLine("Sebelum");
+                    logicalCDC.printArrayStateFlip();
+                    logicalCDC.move(Convert.ToInt16(mymove[0]), Convert.ToInt16(mymove[1]), Convert.ToInt16(mymove[2]), Convert.ToInt16(mymove[3]));
+                }
+                Console.WriteLine("Sesudah");
+                logicalCDC.printArrayStateFlip();
+                Console.WriteLine("Tekan Sembarangan key untuk lanjut");
+                Console.ReadKey();
+                System.GC.Collect();
+
+
+            }
+        }
+
+
+        static void testParallelSrVl()
+        {
+            for (int xy = 0; xy < 1; xy++)
+            {
+                Console.WriteLine(xy + " uuuuuu");
+                time = new Stopwatch();
+                time.Start();
+                Board board = new Board();
+                board.flip(0, 0);
+                SimpleTPVL.DeterministicNode.side = board.sideToMove;
+                SimpleTPVL.DeterministicNode b = new SimpleTPVL.DeterministicNode(board.getBoardState(), null);
+                double x = 0;
+                int u = 0;
+                List<SimpleTPVL.Node> visited = new List<SimpleTPVL.Node>();
+                SimpleTPVL.Node cur = b;
+                visited.Add(cur);
+                cur.expand();
+                cur.updateStatus(cur.rollOut(cur));
+                object a = new object();
+                ParallelOptions po = new ParallelOptions();
+                po.MaxDegreeOfParallelism = 100;
+
+                List<string> threadid = new List<string>();
+                Parallel.For(0, 4000, po, i =>
+                {
+                    //lock (a)
+                    //{
+                    //    bool found = false;
+                    //    foreach (string y in threadid)
+                    //    {
+                    //        if (y == Thread.CurrentThread.ManagedThreadId.ToString())
+                    //        {
+                    //            found = true;
+                    //            break;
+                    //        }
+                    //    }
+                    //    if (!found)
+                    //    {
+                    //        threadid.Add(Thread.CurrentThread.ManagedThreadId.ToString());
+                    //    }
+                    //}
+                    u++;
+                    Console.WriteLine(u);
+                    b.selectAction();
+                    //lock (a)
+                    //{
+                    //    while (!(cur.isLeaf()))
+                    //    {
+                    //        cur = cur.select();
+                    //        visited.Add(cur);
+                    //        if (cur is TP.NondeterministicNode)
+                    //        {
+                    //            if (((TP.NondeterministicNode)cur).selected != null)
+                    //            {
+                    //                cur = ((TP.NondeterministicNode)cur).selected;
+                    //            }
+                    //            else
+                    //            {
+                    //                cur = ((TP.NondeterministicNode)cur.select()).selected;
+                    //            }
+                    //            visited.Add(cur);
+                    //        }
+                    //    }
+                    //    cur.expand();
+                    //}
+                    //double value = cur.rollOut(cur);
+                    //foreach (TP.Node node in visited)
+                    //{
+                    //    node.updateStatus(value);
+                    //}
+                    //lock (a)
+                    //{
+                    //    x +=Node.s;
+                    //}
+                }//;
+                );
+
+                //foreach (string y in threadid)
+                //{
+                //    Console.WriteLine(y);
+                //}
+
+                //for (int i = 0; i < 2001; i++)
+                //{
+                //    Console.WriteLine(i);
+                //    b.selectAction(cur);
+                //    Console.WriteLine(i);
+                //    x += Node.s;
+                //}//;
+                time.Stop();
+                Node.PGL = x / 500;
+                Console.WriteLine("PGL:" + Node.PGL);
+                Console.WriteLine(time.Elapsed.TotalSeconds);
+            }
+        }
+
+        static void testParallelSSAB()
+        {
+            for (int xy = 0; xy < 1; xy++)
+            {
+                Console.WriteLine(xy + " uuuuuu");
+                time = new Stopwatch();
+                time.Start();
+                Board board = new Board();
+                board.flip(0, 0);
+                SimpleTP.DeterministicNode.side = board.sideToMove;
+                SimpleTP.DeterministicNode b = new SimpleTP.DeterministicNode(board.getBoardState(), null);
+                double x = 0;
+                int u = 0;
+                List<SimpleTP.Node> visited = new List<SimpleTP.Node>();
+                SimpleTP.Node cur = b;
+                visited.Add(cur);
+                cur.expand();
+                cur.updateStatus(cur.rollOut(cur));
+                object a = new object();
+                ParallelOptions po = new ParallelOptions();
+                po.MaxDegreeOfParallelism =2;
+
+                List<string> threadid = new List<string>();
+                Parallel.For(0, 2000, po, i =>
+                {
+                    //lock (a)
+                    //{
+                    //    bool found = false;
+                    //    foreach (string y in threadid)
+                    //    {
+                    //        if (y == Thread.CurrentThread.ManagedThreadId.ToString())
+                    //        {
+                    //            found = true;
+                    //            break;
+                    //        }
+                    //    }
+                    //    if (!found)
+                    //    {
+                    //        threadid.Add(Thread.CurrentThread.ManagedThreadId.ToString());
+                    //    }
+                    //}
+                    u++;
+                    Console.WriteLine(u);
+                    b.selectAction();
+                    //lock (a)
+                    //{
+                    //    while (!(cur.isLeaf()))
+                    //    {
+                    //        cur = cur.select();
+                    //        visited.Add(cur);
+                    //        if (cur is TP.NondeterministicNode)
+                    //        {
+                    //            if (((TP.NondeterministicNode)cur).selected != null)
+                    //            {
+                    //                cur = ((TP.NondeterministicNode)cur).selected;
+                    //            }
+                    //            else
+                    //            {
+                    //                cur = ((TP.NondeterministicNode)cur.select()).selected;
+                    //            }
+                    //            visited.Add(cur);
+                    //        }
+                    //    }
+                    //    cur.expand();
+                    //}
+                    //double value = cur.rollOut(cur);
+                    //foreach (TP.Node node in visited)
+                    //{
+                    //    node.updateStatus(value);
+                    //}
+                    //lock (a)
+                    //{
+                    //    x +=Node.s;
+                    //}
+                }//;
+                );
+
+                //foreach (string y in threadid)
+                //{
+                //    Console.WriteLine(y);
+                //}
+
+                //for (int i = 0; i < 2001; i++)
+                //{
+                //    Console.WriteLine(i);
+                //    b.selectAction(cur);
+                //    Console.WriteLine(i);
+                //    x += Node.s;
+                //}//;
+                time.Stop();
+                Node.PGL = x / 500;
+                Console.WriteLine("PGL:"+Node.PGL);
+                Console.WriteLine(time.Elapsed.TotalSeconds);
+            }
+        }
+
+
+        static Stopwatch time;
+
+        static void testParallelProject()
+        {
+            var pcQ = new PCQueue(2);
+            var cancelSource = new CancellationTokenSource();
+            Task<bool> a =  pcQ.enqueueReturn(testPrintA);
+            Task<bool> b =  pcQ.enqueueReturn(testPrintB);
+            
+            //bool hasil = await pcQ.enqueue(testPrintA,cancelSource.Token);
+            //bool hasil = await pcQ.enqueue(testPrintA);
+
+            //Console.WriteLine(a.IsCompleted);
+            Console.WriteLine(a.Result);
+            Console.WriteLine("hai");
+            Console.WriteLine(b.Result);
+            Console.WriteLine("hai");
+            //pcQ.Dispose();
+        }
+
+        static bool testPrintA()
+        {
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
+            //while (timer.Elapsed.TotalSeconds <= 2)
+            //{
+            for (int i = 0; i < 5000;i++ )
+                Console.WriteLine("A : " + i);
+            //}
+            timer.Stop();
+            return true;
+        }
+
+        static bool testPrintB()
+        {
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
+            //while (timer.Elapsed.TotalSeconds <= 2)
+            //{
+            for (int i = 0; i < 5000; i++)
+                Console.WriteLine("B : " + i);
+            //}
+            timer.Stop();
+            return true;
+        }
+        static void testForInParallel()
+        {
+            Task.Run(() => {
+                for (int i = 0; i < 20; i++)
+                {
+                    Console.WriteLine("A : " + i);
+                }
+            });
+
+
+            Task.Run(() =>
+            {
+                for (int i = 0; i < 20; i++)
+                {
+                    Console.WriteLine("B : " + i);
+                }
+            });
+        }
+
+        static void testWhileInParallel()
+        {
+            Task.Run(() =>
+            {
+                int i=0;
+                while (i < 50)
+                {
+                    Console.WriteLine("A : " + i);
+                    i++;
+                }
+            });
+
+
+            Task.Run(() =>
+            {
+                int i = 0;
+                while (i < 50)
+                {
+                    Console.WriteLine("B : " + i);
+                    i++;
+                }
+            });
+        }
+
+       
+        static void testParallelFor2()
+        {
+            List<string> threadid = new List<string>();
+            time = new Stopwatch();
+            time.Start();
+            /*Parallel.For(0, 100000, new ParallelOptions { MaxDegreeOfParallelism = 7 }, (count,loopState) =>
+            {
+                while (time.Elapsed.TotalSeconds <= 10)
+                {
+                    Console.WriteLine(time.Elapsed.TotalSeconds);
+                    Console.WriteLine(Thread.CurrentThread.ManagedThreadId);
+                }
+                loopState.Stop();
+            }); */
+        }
+
+        static void testParallelFor()
+        {
+            Console.WriteLine("Using C# For Loop \n");
+
+            for (int i = 0; i <= 10; i++)
+            {
+                Console.WriteLine("i = {0}, thread = {1}",
+                    i, Thread.CurrentThread.ManagedThreadId);
+                Thread.Sleep(10);
+            }
+
+            Console.WriteLine("\nUsing Parallel.For \n");
+
+            /*Parallel.For(0, 10, i =>
+            {
+                Console.WriteLine("i = {0}, thread = {1}", i,
+                Thread.CurrentThread.ManagedThreadId);
+                Thread.Sleep(10);
+            });*/
+
+            Console.ReadLine();
         }
         static void testTimeSpan()
         {

@@ -7,7 +7,7 @@
         Title="GAME CHINESE DARK CHESS" 
         WindowStartupLocation="CenterScreen"
        WindowState="Maximized"
-        Icon="logo.ico" Background="{x:Null}"  MinHeight="725" MinWidth="1250">
+        Icon="Gambar/logo.ico" Background="{x:Null}"  MinHeight="725" MinWidth="1250">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="24"/>

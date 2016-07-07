@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Engine;
 
-namespace NMCTS
+namespace NMCTS_SR_CR
 {
     public class NondeterministicNode:Node
     {
@@ -13,11 +13,11 @@ namespace NMCTS
         public Node selected { set; get; }
         public Node[] children { set; get; }
 
-        public NondeterministicNode(List<double> dp,Move action)
+        public NondeterministicNode(List<double> dp, Move action, NODE type)
         {
             this.dp = dp;
             this.action = action;
-            this.name = Constant.NONDETERMINISTIC_NODE;
+            this.type = type;
         }
 
         public override Node select()
@@ -29,13 +29,17 @@ namespace NMCTS
         public override void updateStatus(double value)
         {
             this.nVisits += 1;
-            double totalWinRate = 0;
-            foreach (Node x in this.children)
-            {
-                totalWinRate += x.winRate;
-            }
-            this.winRate = totalWinRate;
             this.selected = null;
+        }
+
+        public void sumWinRate()
+        {
+            double total = 0;
+            for (int i = 0; i < this.children.Length; i++)
+            {
+                total += this.children[i].winRate;
+            }
+            this.winRate = total;
         }
 
     }

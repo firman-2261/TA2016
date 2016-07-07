@@ -30,6 +30,19 @@ namespace View
             pengujian.Content = new Experiment();
             this.tournament.Content = "Human Vs Computer";
         }
+
+        public void newGame()
+        {
+            if (this.tournament.Content.ToString() == "Human Vs Computer")
+            {
+                this.game.Content = new GameCDC(this, TOURNAMENT.HUMAN_VS_COMPUTER);
+            }
+            else
+            {
+                this.game.Content = new GameCDC(this, TOURNAMENT.HUMAN_VS_HUMAN);
+            }
+        }
+
         private void menuHumanVsHuman_Click(object sender, RoutedEventArgs e)
         {
             this.txtTempatInformasi.Text = "";

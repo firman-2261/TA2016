@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Engine
 {
     public class Board
     {
         #region Field
+        
         /// <summary>
         /// Representasi chess dalam bentuk array
         /// </summary>
@@ -50,6 +52,7 @@ namespace Engine
         /// </summary>
         public UInt64 allPieces
         {
+            
             get
             {
                 return this.redPieces | this.blackPieces;
@@ -289,6 +292,18 @@ namespace Engine
                 for (int j = 0; j < Constant.COLUMN; j++)
                 {
                     Console.Write(this.array[i, j].number);
+                    Console.Write("\t");
+                }
+                Console.WriteLine();
+            }
+        }
+        public void printArrayStateFlip()
+        {
+            for (int i = 0; i < Constant.ROW; i++)
+            {
+                for (int j = 0; j < Constant.COLUMN; j++)
+                {
+                    Console.Write("(" + (isPositionEmpty(i, j) ? "x" : (isFlipped(i, j) ? this.array[i, j].number.ToString() : "x")) + "," + (isPositionEmpty(i, j) ? "x" : (isFlipped(i, j) ? "1" : "0")) + ")");
                     Console.Write("\t");
                 }
                 Console.WriteLine();

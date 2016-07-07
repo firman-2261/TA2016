@@ -5,21 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using Engine;
 
-namespace NMCTS
+namespace NMCTS_SR_CR
 {
     public class Node
     {
-        public static readonly double bias = 0.75;
         public static readonly double d = 0.01;
+        public static readonly double cr = 0.3;
+        public static readonly double cs = 0.9;
+        public NODE type;
         public static int side;
         public static double PGL;
         public static double s;
 
         public double nVisits { set; get; }
         public double winRate { set; get; }
-
-        public byte name { set; get; }
-
         public Move action { set; get; }
         public virtual bool isLeaf() { return true; }
         public virtual Node select() { return null; }
@@ -29,5 +28,6 @@ namespace NMCTS
         public virtual void expand() { }
 
         public virtual double rollOut(Node tn) { return 0; }
+
     }
 }

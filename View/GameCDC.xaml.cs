@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
 using Engine;
 using NMCTS;
 
@@ -69,9 +70,8 @@ namespace View
             {
                 if (currentTurn == PLAYER.COMPUTER)
                 {
-                    int row = Shuffle.rnd.Next(Constant.ROW);
-                    int column = Shuffle.rnd.Next(Constant.COLUMN);
-                    moveByCoding(new Position(row, column), new Position(row, column));
+                    Position tmp = Shuffle.getShufflePosition();
+                    moveByCoding(tmp, tmp);
                 }
             }
 
@@ -90,8 +90,6 @@ namespace View
         private Rectangle[,] rectanglesFocusSisaPieces;
 
         private MediaPlayer Player;
-        private Position sisaPieceBlack;
-        private Position sisaPieceRed;
         public Button[,] sisaPieces { set; get; }
         public int strokeGridLine { private set; get; }
 
@@ -259,7 +257,7 @@ namespace View
                 }
             }
         }
-
+        static Stopwatch timer = new Stopwatch();
         private void switchTurn()
         {
             END_STATE tmpResult = this.logicalCDC.isEnd();
@@ -311,19 +309,36 @@ namespace View
                     changeDisable();
                     if (this.tournament == TOURNAMENT.HUMAN_VS_COMPUTER)
                     {
-                        Thread timer = new Thread(() =>
+                        timer.Reset();
+                        Task.Run(() =>
                         {
-                            Thread.Sleep(10);
+                            //Thread.Sleep(10);
                             setPGLValue();
                             DeterministicNode b = new DeterministicNode(this.logicalCDC.getBoardState(), null, Constant.NONE, Constant.NONE);
-                            for (int i = 0; i < 10; i++)
+                            //for (int i = 0; i < 10; i++)
+                            timer.Start();
+                            //while(timer.Elapsed.TotalSeconds<=2)
+                            //{
+                            //    Console.WriteLine(timer.Elapsed.TotalSeconds);
+                            //    //Console.WriteLine(i);
+                            //    b.selectAction();
+                            //    //Console.WriteLine(i);
+                            //}
+                            for (int i = 0; i < 200; i++)
                             {
-                                //Console.WriteLine(i);
+
                                 b.selectAction();
-                                //Console.WriteLine(i);
+                                Console.WriteLine(i);
                             }
-                            Node maxWinRate = b.getSelectedNode();
-                            this.Dispatcher.Invoke((Action)(() =>
+                            Node maxWinRate = b.children[0];
+                            for (int i = 1; i < b.children.Length; i++)
+                            {
+                                if (maxWinRate.winRate <= b.children[i].winRate)
+                                {
+                                    maxWinRate = b.children[i];
+                                }
+                            }
+                            this.Dispatcher.BeginInvoke((Action)(() =>
                             {//jalankan
                                 moveByCoding(maxWinRate.action.from, maxWinRate.action.to);
 
@@ -331,7 +346,6 @@ namespace View
                                 //switchTurn();
                             }));
                         });
-                        timer.Start();
                     }
                 }
             }
@@ -342,12 +356,14 @@ namespace View
             DeterministicNode.side = this.logicalCDC.sideToMove;
             DeterministicNode b = new DeterministicNode(this.logicalCDC.getBoardState(), null,Constant.NONE,Constant.NONE);
             double x = 0;
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 500; i++)
             {
                 b.selectAction();
                 x += Node.s;
+                //Console.WriteLine(Node.s);
             }
-            Node.PGL = x / 5;
+            Node.PGL = x / 500;
+            Console.WriteLine("PGL = " + Node.PGL);
         }
 
         private void onClick(object obj, RoutedEventArgs e)
