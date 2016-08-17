@@ -26,9 +26,9 @@ namespace View
         {
             InitializeComponent();
             _propertyGrid.SelectedObject = new Settings();
-            game.Content = new GameCDC(this, TOURNAMENT.HUMAN_VS_COMPUTER);
             pengujian.Content = new Experiment();
-            this.tournament.Content = "Human Vs Computer";
+            this.tournament.Content = "-";
+            menuHome_Click(null,null);
         }
 
         public void newGame()
@@ -41,6 +41,13 @@ namespace View
             {
                 this.game.Content = new GameCDC(this, TOURNAMENT.HUMAN_VS_HUMAN);
             }
+        }
+
+        private void menuHome_Click(object sender, RoutedEventArgs e)
+        {
+            this.txtTempatInformasi.Text = "";
+            this.tournament.Content = "-";
+            this.game.Content = new Home();
         }
 
         private void menuHumanVsHuman_Click(object sender, RoutedEventArgs e)
@@ -57,10 +64,91 @@ namespace View
             game.Content = new GameCDC(this, TOURNAMENT.HUMAN_VS_COMPUTER);
 
         }
+        //private void menuGenerate_Click(object sender, RoutedEventArgs e)
+        //{
+        //    Piece [,] array = new Piece[Constant.ROW, Constant.COLUMN];
+        //    array[0, 0] = Piece.none;
+        //    array[0, 1] = Piece.none;
+        //    array[0, 2] = Piece.none;
+        //    array[0, 3] = Piece.none;
+        //    array[0, 4] = Piece.redPawn;
+        //    array[0, 5] = Piece.none;
+        //    array[0, 6] = Piece.none;
+        //    array[0, 7] = Piece.none;
 
-        private void menuPengujian_Click(object sender, RoutedEventArgs e)
+        //    array[1, 0] = Piece.none;
+        //    array[1, 1] = Piece.blackPawn;
+        //    array[1, 2] = Piece.none;
+        //    array[1, 3] = Piece.none;
+        //    array[1, 4] = Piece.redKing;
+        //    array[1, 5] = Piece.none;
+        //    array[1, 6] = Piece.none;
+        //    array[1, 7] = Piece.none;
+
+
+        //    array[2, 0] = Piece.redMinister;
+        //    array[2, 1] = Piece.redGuard;
+        //    array[2, 2] = Piece.none;
+        //    array[2, 3] = Piece.none;
+        //    array[2, 4] = Piece.blackCannon;
+        //    array[2, 5] = Piece.none;
+        //    array[2, 6] = Piece.none;
+        //    array[2, 7] = Piece.blackRook;
+
+
+        //    array[3, 0] = Piece.none;
+        //    array[3, 1] = Piece.blackRook;
+        //    array[3, 2] = Piece.none;
+        //    array[3, 3] = Piece.none;
+        //    array[3, 4] = Piece.redMinister;
+        //    array[3, 5] = Piece.none;
+        //    array[3, 6] = Piece.none;
+        //    array[3, 7] = Piece.none;
+
+        //    Board board = new Board(array, Constant.RED_SIDE);
+        //    this.txtTempatInformasi.Text = "";
+        //    this.tournament.Content = "Human Vs Human";
+        //    game.Content = new GameCDC(this, TOURNAMENT.HUMAN_VS_HUMAN,board);
+
+        //    GameCDC instanceCDC = ((GameCDC)game.Content);
+        //    instanceCDC.pieces[0, 4].RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        //    instanceCDC.pieces[1, 1].RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        //    instanceCDC.pieces[2, 0].RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        //    instanceCDC.pieces[2, 1].RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        //    instanceCDC.pieces[2, 4].RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        //    instanceCDC.pieces[3, 4].RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+
+
+        //    instanceCDC.addSisaPiece(Brushes.Red, instanceCDC.createContentBidak(Constant.RED_PAWN));
+        //    instanceCDC.addSisaPiece(Brushes.Red, instanceCDC.createContentBidak(Constant.RED_PAWN));
+        //    instanceCDC.addSisaPiece(Brushes.Red, instanceCDC.createContentBidak(Constant.RED_PAWN));
+        //    instanceCDC.addSisaPiece(Brushes.Red, instanceCDC.createContentBidak(Constant.RED_PAWN));
+        //    instanceCDC.addSisaPiece(Brushes.Red, instanceCDC.createContentBidak(Constant.RED_GUARD));
+        //    instanceCDC.addSisaPiece(Brushes.Red, instanceCDC.createContentBidak(Constant.RED_ROOK));
+        //    instanceCDC.addSisaPiece(Brushes.Red, instanceCDC.createContentBidak(Constant.RED_ROOK));
+        //    instanceCDC.addSisaPiece(Brushes.Red, instanceCDC.createContentBidak(Constant.RED_CANNON));
+        //    instanceCDC.addSisaPiece(Brushes.Red, instanceCDC.createContentBidak(Constant.RED_CANNON));
+        //    instanceCDC.addSisaPiece(Brushes.Red, instanceCDC.createContentBidak(Constant.RED_KNIGHT));
+        //    instanceCDC.addSisaPiece(Brushes.Red, instanceCDC.createContentBidak(Constant.RED_KNIGHT));
+
+        //    instanceCDC.addSisaPiece(Brushes.Black, instanceCDC.createContentBidak(Constant.BLACK_CANNON));
+        //    instanceCDC.addSisaPiece(Brushes.Black, instanceCDC.createContentBidak(Constant.BLACK_PAWN));
+        //    instanceCDC.addSisaPiece(Brushes.Black, instanceCDC.createContentBidak(Constant.BLACK_PAWN));
+        //    instanceCDC.addSisaPiece(Brushes.Black, instanceCDC.createContentBidak(Constant.BLACK_PAWN));
+        //    instanceCDC.addSisaPiece(Brushes.Black, instanceCDC.createContentBidak(Constant.BLACK_PAWN));
+        //    instanceCDC.addSisaPiece(Brushes.Black, instanceCDC.createContentBidak(Constant.BLACK_KING));
+        //    instanceCDC.addSisaPiece(Brushes.Black, instanceCDC.createContentBidak(Constant.BLACK_GUARD));
+        //    instanceCDC.addSisaPiece(Brushes.Black, instanceCDC.createContentBidak(Constant.BLACK_GUARD));
+        //    instanceCDC.addSisaPiece(Brushes.Black, instanceCDC.createContentBidak(Constant.BLACK_MINISTER));
+        //    instanceCDC.addSisaPiece(Brushes.Black, instanceCDC.createContentBidak(Constant.BLACK_MINISTER));
+        //    instanceCDC.addSisaPiece(Brushes.Black, instanceCDC.createContentBidak(Constant.BLACK_KNIGHT));
+        //    instanceCDC.addSisaPiece(Brushes.Black, instanceCDC.createContentBidak(Constant.BLACK_KNIGHT));
+
+        //}
+        
+        private void menuTree_Click(object sender, RoutedEventArgs e)
         {
-            pengujian.Content = new Experiment();
+            this.tree.Show();
         }
 
         private void menuOptions_Click(object sender, RoutedEventArgs e)
@@ -74,13 +162,15 @@ namespace View
         }
         private void menuBantuan_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Tunggu Robin");
+            FrmHelp a = new FrmHelp();
+            a.ShowDialog();
         }
 
 
         private void menuTentangKami_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Tunggu Robin");
+            AboutUs a = new AboutUs();
+            a.ShowDialog();
         }
 
         private void menuKeluar_Click(object sender, RoutedEventArgs e)
@@ -90,32 +180,54 @@ namespace View
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Properties.Settings.Default["FirstPlayer"] = e.AddedItems[0];
-            Properties.Settings.Default.Save();
+            try
+            {
+                Properties.Settings.Default["FirstPlayer"] = e.AddedItems[0];
+                Properties.Settings.Default.Save();
+            }
+
+            catch (Exception er)
+            {
+                MessageBox.Show(er.Message);
+            }
         }
 
         private void _propertyGrid_PropertyValueChanged(object sender, Xceed.Wpf.Toolkit.PropertyGrid.PropertyValueChangedEventArgs e)
         {
-            if (_propertyGrid.SelectedProperty != null)
+            try
             {
-                string name = _propertyGrid.SelectedProperty.ToString();
-                Properties.Settings.Default[name] = e.NewValue.ToString();
-                Properties.Settings.Default.Save();
+                if (_propertyGrid.SelectedProperty != null)
+                {
+                    string name = _propertyGrid.SelectedProperty.ToString();
+                    Properties.Settings.Default[name] = e.NewValue.ToString();
+                    Properties.Settings.Default.Save();
+                }
+            }
+            catch(Exception er)
+            {
+                MessageBox.Show(er.Message);
             }
         }
 
         private void _propertyGrid_PreparePropertyItem(object sender, Xceed.Wpf.Toolkit.PropertyGrid.PropertyItemEventArgs e)
         {
-            for (int i = 0; i < _propertyGrid.Properties.Count; i++)
+            try
             {
-                foreach (SettingsProperty current in Properties.Settings.Default.Properties)
+                for (int i = 0; i < _propertyGrid.Properties.Count; i++)
                 {
-                    if (((Xceed.Wpf.Toolkit.PropertyGrid.PropertyItem)_propertyGrid.Properties[i]).PropertyName == current.Name)
+                    foreach (SettingsProperty current in Properties.Settings.Default.Properties)
                     {
-                        ((Xceed.Wpf.Toolkit.PropertyGrid.PropertyItem)_propertyGrid.Properties[i]).SetValue(Xceed.Wpf.Toolkit.PropertyGrid.PropertyItem.ValueProperty, Properties.Settings.Default[current.Name]);
-                        break;
+                        if (((Xceed.Wpf.Toolkit.PropertyGrid.PropertyItem)_propertyGrid.Properties[i]).PropertyName == current.Name)
+                        {
+                            ((Xceed.Wpf.Toolkit.PropertyGrid.PropertyItem)_propertyGrid.Properties[i]).SetValue(Xceed.Wpf.Toolkit.PropertyGrid.PropertyItem.ValueProperty, Properties.Settings.Default[current.Name]);
+                            break;
+                        }
                     }
                 }
+            }
+            catch (Exception er)
+            {
+                MessageBox.Show(er.Message);
             }
         }
         public void WriteLine(string Informasi)
@@ -125,11 +237,6 @@ namespace View
             txtTempatInformasi.AppendText(Environment.NewLine);
             txtTempatInformasi.CaretIndex = txtTempatInformasi.Text.Length;
             txtTempatInformasi.ScrollToEnd();
-        }
-
-        private void LayoutAnchorable_Hiding(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            MessageBox.Show("hallo");
         }
 
 

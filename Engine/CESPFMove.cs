@@ -9,9 +9,9 @@ namespace Engine
     public class CESPFMove
     {
         public Move move { private set; get; }
-        public int score { private set; get; }
+        public double score { private set; get; }
 
-        public CESPFMove(Move move,int score){
+        public CESPFMove(Move move,double score){
             this.move = move;
             this.score = score;
         }

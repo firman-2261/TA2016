@@ -15,7 +15,12 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
 using Engine;
-using NMCTS;
+using cumulativeRP = Parallelization.CR.Root;
+using cumulativeTP = Parallelization.CR.Tree;
+using cumulativeTPVL = Parallelization.CR.TreeVl;
+using SimpleCumulativeRP = Parallelization.SRCR.Root;
+using SimpleCumulativeTP = Parallelization.SRCR.Tree;
+using SimpleCumulativeTPVL = Parallelization.SRCR.TreeVl;
 
 namespace View
 {
@@ -32,52 +37,26 @@ namespace View
             this.tournament = tournament;
             logicalCDC = new Board();
 
-            colorGridLine = Brushes.Black;
-            strokeGridLine = 1;
-           
-            this.grid = new Grid();
-            this.gridSisaPiece = new Grid();
-            this.colorGridLine = colorGridLine;
-            this.strokeGridLine = strokeGridLine;
-            rectangles = new Rectangle[Constant.ROW, Constant.COLUMN];
-            rectanglesFocus = new Rectangle[Constant.ROW, Constant.COLUMN];
-            pieces = new Button[Constant.ROW, Constant.COLUMN];
-            rectanglesSisaPieces = new Rectangle[Constant.ROW / 2, Constant.COLUMN * 2];
-            rectanglesFocusSisaPieces = new Rectangle[Constant.ROW / 2, Constant.COLUMN * 2];
-            sisaPieces = new Button[Constant.ROW / 2, Constant.COLUMN * 2];
-            inisiasiUkuran();
-            inisiasiRectangle();
-            inisiasiRectangleFocus();
-            inisiasiPiece();
-            inisiasiUkuranSisaPiece();
-            inisiasiSisaPiece();
+            index = 0;
 
-            Player = new MediaPlayer();
+            inisiasi(false);
 
-            window.Children.Add(this.grid);
-            windowSisaPiece.Children.Add(this.gridSisaPiece);
-
-            if (Properties.Settings.Default["FirstPlayer"].ToString() == "Human")
-            {
-                currentTurn = PLAYER.HUMAN;
-            }
-            else
-            {
-                currentTurn = PLAYER.COMPUTER;
-            }
-
-            if (tournament == TOURNAMENT.HUMAN_VS_COMPUTER)
-            {
-                if (currentTurn == PLAYER.COMPUTER)
-                {
-                    Position tmp = Shuffle.getShufflePosition();
-                    moveByCoding(tmp, tmp);
-                }
-            }
-
-            writeStatusBar();
         }
 
+        public GameCDC(MainWindow main, TOURNAMENT tournament,Board board)
+        {
+            InitializeComponent();
+
+            this.main = main;
+            this.tournament = tournament;
+            logicalCDC = board;
+
+            index = 1;
+
+            inisiasi(true);
+        }
+
+        private int index; // digunakan untuk menampilkan index
         private TOURNAMENT tournament;
         public MainWindow main;
         public PLAYER currentTurn;
@@ -107,6 +86,84 @@ namespace View
 
         public Focus currentFocus { set; get; }
 
+
+        public void inisiasi(bool showIndex)
+        {
+            colorGridLine = Brushes.Black;
+            strokeGridLine = 1;
+
+            this.grid = new Grid();
+            this.gridSisaPiece = new Grid();
+            this.colorGridLine = colorGridLine;
+            this.strokeGridLine = strokeGridLine;
+            rectangles = new Rectangle[Constant.ROW, Constant.COLUMN];
+            rectanglesFocus = new Rectangle[Constant.ROW, Constant.COLUMN];
+            pieces = new Button[Constant.ROW, Constant.COLUMN];
+            rectanglesSisaPieces = new Rectangle[Constant.ROW / 2, Constant.COLUMN * 2];
+            rectanglesFocusSisaPieces = new Rectangle[Constant.ROW / 2, Constant.COLUMN * 2];
+            sisaPieces = new Button[Constant.ROW / 2, Constant.COLUMN * 2];
+            inisiasiUkuran();
+            inisiasiRectangle();
+            inisiasiRectangleFocus();
+            inisiasiPiece();
+            inisiasiUkuranSisaPiece();
+            inisiasiSisaPiece();
+            if (showIndex)
+            {
+                inisiasiIndex();
+            }
+            Player = new MediaPlayer();
+
+            window.Children.Add(this.grid);
+            windowSisaPiece.Children.Add(this.gridSisaPiece);
+
+            if (Properties.Settings.Default["FirstPlayer"].ToString() == "Human")
+            {
+                currentTurn = PLAYER.HUMAN;
+            }
+            else
+            {
+                currentTurn = PLAYER.COMPUTER;
+            }
+
+            if (tournament == TOURNAMENT.HUMAN_VS_COMPUTER)
+            {
+                if (currentTurn == PLAYER.COMPUTER)
+                {
+                    Position tmp = Shuffle.getShufflePosition();
+                    moveByCoding(tmp, tmp);
+                }
+            }
+
+            writeStatusBar();
+        }
+
+        private void inisiasiIndex()
+        {
+            this.grid.Children.Add(createIndex("a", 1, 0));
+            this.grid.Children.Add(createIndex("b", 2, 0));
+            this.grid.Children.Add(createIndex("c", 3, 0));
+            this.grid.Children.Add(createIndex("d", 4, 0));
+            this.grid.Children.Add(createIndex("1", 0, 1));
+            this.grid.Children.Add(createIndex("2", 0, 2));
+            this.grid.Children.Add(createIndex("3", 0, 3));
+            this.grid.Children.Add(createIndex("4", 0, 4));
+            this.grid.Children.Add(createIndex("5", 0, 5));
+            this.grid.Children.Add(createIndex("6", 0, 6));
+            this.grid.Children.Add(createIndex("7", 0, 7));
+            this.grid.Children.Add(createIndex("8", 0, 8));
+        }
+
+        public Button createIndex(string text, int row, int column)
+        {
+            Button ret = new Button();
+            ret.Background = Brushes.Transparent;
+            ret.BorderThickness = new Thickness(0);
+            ret.Content = createContentBidak(text);
+            ret.SetValue(Grid.RowProperty, row);
+            ret.SetValue(Grid.ColumnProperty, column);
+            return ret;
+        }
 
         public void writeStatusBar()
         {
@@ -147,11 +204,11 @@ namespace View
 
         private void inisiasiUkuran()
         {
-            for (int i = 0; i < Constant.ROW; i++)
+            for (int i = 0; i < Constant.ROW+index; i++)
             {
                 this.grid.RowDefinitions.Add(new RowDefinition());
             }
-            for (int i = 0; i < Constant.COLUMN; i++)
+            for (int i = 0; i < Constant.COLUMN+index; i++)
             {
                 this.grid.ColumnDefinitions.Add(new ColumnDefinition());
             }
@@ -163,19 +220,69 @@ namespace View
             {
                 for (int y = 0; y < Constant.COLUMN; y++)
                 {
-
                     //INISIASI PIECE
-
-                    pieces[x, y] = new Button();
-                    pieces[x, y].Background = Brushes.Bisque;
-                    pieces[x, y].Foreground = Brushes.Blue;
-                    pieces[x, y].Style = (Style)Application.Current.FindResource("CircleButton");
-                    pieces[x, y].SetValue(Grid.RowProperty, x);
-                    pieces[x, y].SetValue(Grid.ColumnProperty, y);
-                    pieces[x, y].Click += new RoutedEventHandler(onClick);
+                    pieces[x, y] = createStyleBidak();
+                    pieces[x, y].SetValue(Grid.RowProperty, x+index);
+                    pieces[x, y].SetValue(Grid.ColumnProperty, y+index);
                     this.grid.Children.Add(pieces[x, y]);
+
+                    if (this.logicalCDC.array[x,y].number == Constant.NONE)
+                    {
+                        this.pieces[x,y].Opacity = 0;
+                    }
                 }
             }
+        }
+
+        public Button createStyleBidak(string unicode="",SolidColorBrush foreground =null)
+        {
+            Button tmp = new Button();
+            tmp.Background = Brushes.Bisque;
+            tmp.Foreground = Brushes.Blue;
+            tmp.Style = (Style)Application.Current.FindResource("CircleButton");
+            tmp.Click += new RoutedEventHandler(onClick);
+            if (unicode.Length != 0)
+            {
+                tmp.Content = unicode;
+            }
+            if (foreground != null)
+            {
+                tmp.Foreground = foreground;
+            }
+            return tmp;
+        }
+
+        public Viewbox createContentBidak(int number)
+        {
+            Viewbox vb = new Viewbox();
+            vb.MaxHeight = 40;
+            vb.MaxWidth = 40;
+            vb.HorizontalAlignment = HorizontalAlignment.Center;
+            vb.VerticalAlignment = VerticalAlignment.Center;
+
+            TextBlock txt = new TextBlock(new Run(Unicode.getUnicodePiece(number)));
+            txt.VerticalAlignment = VerticalAlignment.Center;
+            txt.HorizontalAlignment = HorizontalAlignment.Center;
+            txt.FontFamily = new FontFamily("Times New Romans");
+            vb.Child = txt;
+
+            return vb;
+        }
+        public Viewbox createContentBidak(string text)
+        {
+            Viewbox vb = new Viewbox();
+            vb.MaxHeight = 40;
+            vb.MaxWidth = 40;
+            vb.HorizontalAlignment = HorizontalAlignment.Center;
+            vb.VerticalAlignment = VerticalAlignment.Center;
+
+            TextBlock txt = new TextBlock(new Run(text));
+            txt.VerticalAlignment = VerticalAlignment.Center;
+            txt.HorizontalAlignment = HorizontalAlignment.Center;
+            txt.FontFamily = new FontFamily("Times New Romans");
+            vb.Child = txt;
+
+            return vb;
         }
 
         private void inisiasiRectangle()
@@ -189,8 +296,8 @@ namespace View
                     rectangles[x, y] = new Rectangle();
                     rectangles[x, y].Stroke = colorGridLine;
                     rectangles[x, y].StrokeThickness = strokeGridLine;
-                    rectangles[x, y].SetValue(Grid.RowProperty, x);
-                    rectangles[x, y].SetValue(Grid.ColumnProperty, y);
+                    rectangles[x, y].SetValue(Grid.RowProperty, x+index);
+                    rectangles[x, y].SetValue(Grid.ColumnProperty, y+index);
                     this.grid.Children.Add(rectangles[x, y]);
 
                 }
@@ -207,8 +314,8 @@ namespace View
                     //RECTANGLE FOCUS
 
                     rectanglesFocus[x, y] = new Rectangle();
-                    rectanglesFocus[x, y].SetValue(Grid.RowProperty, x);
-                    rectanglesFocus[x, y].SetValue(Grid.ColumnProperty, y);
+                    rectanglesFocus[x, y].SetValue(Grid.RowProperty, x+index);
+                    rectanglesFocus[x, y].SetValue(Grid.ColumnProperty, y+index);
                     rectanglesFocus[x, y].StrokeThickness = 0;
                     rectanglesFocus[x, y].Margin = new Thickness();
                     rectanglesFocus[x, y].Stroke = null;
@@ -230,15 +337,15 @@ namespace View
                     rectanglesSisaPieces[x, y] = new Rectangle();
                     rectanglesSisaPieces[x, y].Stroke = colorGridLine;
                     rectanglesSisaPieces[x, y].StrokeThickness = 0;
-                    rectanglesSisaPieces[x, y].SetValue(Grid.RowProperty, x);
-                    rectanglesSisaPieces[x, y].SetValue(Grid.ColumnProperty, y);
+                    rectanglesSisaPieces[x, y].SetValue(Grid.RowProperty, x+index);
+                    rectanglesSisaPieces[x, y].SetValue(Grid.ColumnProperty, y+index);
                     this.gridSisaPiece.Children.Add(rectanglesSisaPieces[x, y]);
 
                     //RECTANGLE FOCUS
 
                     rectanglesFocusSisaPieces[x, y] = new Rectangle();
-                    rectanglesFocusSisaPieces[x, y].SetValue(Grid.RowProperty, x);
-                    rectanglesFocusSisaPieces[x, y].SetValue(Grid.ColumnProperty, y);
+                    rectanglesFocusSisaPieces[x, y].SetValue(Grid.RowProperty, x+index);
+                    rectanglesFocusSisaPieces[x, y].SetValue(Grid.ColumnProperty, y+index);
                     rectanglesFocusSisaPieces[x, y].StrokeThickness = 0;
                     rectanglesFocusSisaPieces[x, y].Margin = new Thickness();
                     rectanglesFocusSisaPieces[x, y].Stroke = null;
@@ -312,66 +419,113 @@ namespace View
                         timer.Reset();
                         Task.Run(() =>
                         {
-                            //Thread.Sleep(10);
-                            setPGLValue();
-                            DeterministicNode b = new DeterministicNode(this.logicalCDC.getBoardState(), null, Constant.NONE, Constant.NONE);
-                            //for (int i = 0; i < 10; i++)
-                            timer.Start();
-                            //while(timer.Elapsed.TotalSeconds<=2)
-                            //{
-                            //    Console.WriteLine(timer.Elapsed.TotalSeconds);
-                            //    //Console.WriteLine(i);
-                            //    b.selectAction();
-                            //    //Console.WriteLine(i);
-                            //}
-                            for (int i = 0; i < 200; i++)
+                            string metode = Properties.Settings.Default["Metode"].ToString();
+                            string fungsiEvaluasi = Properties.Settings.Default["Evaluasi"].ToString();
+                            int jlhParallelTask = int.Parse(Properties.Settings.Default["ParallelTask"].ToString());
+                            int moveTime = int.Parse(Properties.Settings.Default["MoveTime"].ToString());
+                            if (metode.Equals("Root"))
                             {
-
-                                b.selectAction();
-                                Console.WriteLine(i);
-                            }
-                            Node maxWinRate = b.children[0];
-                            for (int i = 1; i < b.children.Length; i++)
-                            {
-                                if (maxWinRate.winRate <= b.children[i].winRate)
+                                if (fungsiEvaluasi.Equals("Cumulative"))
                                 {
-                                    maxWinRate = b.children[i];
+                                    cumulativeRP.RootParallelization a = new cumulativeRP.RootParallelization(jlhParallelTask, moveTime, this.logicalCDC.getBoardState(), false);
+                                    a.setPGLValue();
+                                    cumulativeRP.Node tmp = a.startNMCTS();
+
+                                    this.Dispatcher.BeginInvoke((Action)(() =>
+                                    {//jalankan
+                                        moveByCoding(tmp.action.from, tmp.action.to);
+
+                                        main.tree.Content = new CumulativeTree(a.result, CumulativeTree.METODE.ROOT);
+                                        //switchTurn();
+                                    }));
+                                }
+                                else
+                                {
+                                    SimpleCumulativeRP.RootParallelization a = new SimpleCumulativeRP.RootParallelization(jlhParallelTask, moveTime, this.logicalCDC.getBoardState(), false);
+                                    a.setPGLValue();
+                                    SimpleCumulativeRP.Node tmp = a.startNMCTS();
+
+                                    this.Dispatcher.BeginInvoke((Action)(() =>
+                                    {//jalankan
+                                        moveByCoding(tmp.action.from, tmp.action.to);
+
+                                        main.tree.Content = new SimpleTree(a.result, SimpleTree.METODE.ROOT);
+                                        //switchTurn();
+                                    }));
                                 }
                             }
-                            this.Dispatcher.BeginInvoke((Action)(() =>
-                            {//jalankan
-                                moveByCoding(maxWinRate.action.from, maxWinRate.action.to);
+                            else if (metode.Equals("Tree"))
+                            {
+                                if (fungsiEvaluasi.Equals("Cumulative"))
+                                {
+                                    cumulativeTP.TreeParallelization a = new cumulativeTP.TreeParallelization(jlhParallelTask, moveTime, this.logicalCDC.getBoardState(), false);
+                                    a.setPGLValue();
+                                    cumulativeTP.Node tmp = a.startNMCTS();
 
-                                main.tree.Content = new Tree(b);
-                                //switchTurn();
-                            }));
+                                    this.Dispatcher.BeginInvoke((Action)(() =>
+                                    {//jalankan
+                                        moveByCoding(tmp.action.from, tmp.action.to);
+
+                                        main.tree.Content = new CumulativeTree(a.tree, CumulativeTree.METODE.TREE);
+                                        //switchTurn();
+                                    }));
+                                }
+                                else
+                                {
+                                    SimpleCumulativeTP.TreeParallelization a = new SimpleCumulativeTP.TreeParallelization(jlhParallelTask, moveTime, this.logicalCDC.getBoardState(), false);
+                                    a.setPGLValue();
+                                    SimpleCumulativeTP.Node tmp = a.startNMCTS();
+
+                                    this.Dispatcher.BeginInvoke((Action)(() =>
+                                    {//jalankan
+                                        moveByCoding(tmp.action.from, tmp.action.to);
+
+                                        main.tree.Content = new SimpleTree(a.tree, SimpleTree.METODE.TREE);
+                                        //switchTurn();
+                                    }));
+                                }
+                            }else{
+                                if (fungsiEvaluasi.Equals("Cumulative"))
+                                {
+                                    cumulativeTPVL.TreeParallelization a = new cumulativeTPVL.TreeParallelization(jlhParallelTask, moveTime, this.logicalCDC.getBoardState(), false);
+                                    a.setPGLValue();
+                                    cumulativeTPVL.Node tmp = a.startNMCTS();
+
+                                    this.Dispatcher.BeginInvoke((Action)(() =>
+                                    {//jalankan
+                                        moveByCoding(tmp.action.from, tmp.action.to);
+
+                                        main.tree.Content = new CumulativeTree(a.tree, CumulativeTree.METODE.TREEVL);
+                                        //switchTurn();
+                                    }));
+                                }
+                                else
+                                {
+                                    SimpleCumulativeTPVL.TreeParallelization a = new SimpleCumulativeTPVL.TreeParallelization(jlhParallelTask, moveTime, this.logicalCDC.getBoardState(), false);
+                                    a.setPGLValue();
+                                    SimpleCumulativeTPVL.Node tmp = a.startNMCTS();
+
+                                    this.Dispatcher.BeginInvoke((Action)(() =>
+                                    {//jalankan
+                                        moveByCoding(tmp.action.from, tmp.action.to);
+
+                                        main.tree.Content = new SimpleTree(a.tree, SimpleTree.METODE.TREEVL);
+                                        //switchTurn();
+                                    }));
+                                }
+                            }
                         });
                     }
                 }
             }
         }
 
-        public void setPGLValue()
-        {
-            DeterministicNode.side = this.logicalCDC.sideToMove;
-            DeterministicNode b = new DeterministicNode(this.logicalCDC.getBoardState(), null,Constant.NONE,Constant.NONE);
-            double x = 0;
-            for (int i = 0; i < 500; i++)
-            {
-                b.selectAction();
-                x += Node.s;
-                //Console.WriteLine(Node.s);
-            }
-            Node.PGL = x / 500;
-            Console.WriteLine("PGL = " + Node.PGL);
-        }
-
         private void onClick(object obj, RoutedEventArgs e)
         {
             Button tmp = (Button)obj;
 
-            int row = (int)tmp.GetValue(Grid.RowProperty);
-            int column = (int)tmp.GetValue(Grid.ColumnProperty);
+            int row = (int)tmp.GetValue(Grid.RowProperty) - index;
+            int column = (int)tmp.GetValue(Grid.ColumnProperty) - index;
 
             Piece tmpPiece = this.logicalCDC.array[row, column];
             //POSISI YANG DI KLIK BUKAN MERUPAKAN TEMPAT KOSONG
@@ -380,18 +534,7 @@ namespace View
                 //PIECE TERSEBUT BELUM DIBUKA
                 if (!this.logicalCDC.isFlipped(row, column))
                 {
-                    Viewbox vb = new Viewbox();
-                    vb.MaxHeight = 40;
-                    vb.MaxWidth = 40;
-                    vb.HorizontalAlignment = HorizontalAlignment.Center;
-                    vb.VerticalAlignment = VerticalAlignment.Center;
-
-                    TextBlock txt = new TextBlock(new Run(Unicode.getUnicodePiece(tmpPiece.number)));
-                    txt.VerticalAlignment = VerticalAlignment.Center;
-                    txt.HorizontalAlignment = HorizontalAlignment.Center;
-                    txt.FontFamily = new FontFamily("Times New Romans");
-                    vb.Child = txt;
-                    tmp.Content = vb;
+                    tmp.Content = createContentBidak(tmpPiece.number);
 
                     if (tmpPiece.number > 0)
                     {
@@ -638,11 +781,11 @@ namespace View
             swap<Button>(ref this.pieces[to.row, to.column], ref this.pieces[from.row, from.column]);
 
             //2. DALAM GRID
-            this.pieces[to.row, to.column].SetValue(Grid.RowProperty, to.row);
-            this.pieces[to.row, to.column].SetValue(Grid.ColumnProperty, to.column);
+            this.pieces[to.row, to.column].SetValue(Grid.RowProperty, to.row+index);
+            this.pieces[to.row, to.column].SetValue(Grid.ColumnProperty, to.column + index);
 
-            this.pieces[from.row, from.column].SetValue(Grid.RowProperty, from.row);
-            this.pieces[from.row, from.column].SetValue(Grid.ColumnProperty, from.column);
+            this.pieces[from.row, from.column].SetValue(Grid.RowProperty, from.row + index);
+            this.pieces[from.row, from.column].SetValue(Grid.ColumnProperty, from.column + index);
 
 
             //3. JIKA CURRENT FROM POSISI, OPACITY != 0 MAKA JADIKAN OPACITY - NYA MENJADI 0
@@ -662,18 +805,7 @@ namespace View
             //action flipping
             if (from.row == to.row && from.column == to.column)
             {
-                Viewbox vb = new Viewbox();
-                vb.MaxHeight = 40;
-                vb.MaxWidth = 40;
-                vb.HorizontalAlignment = HorizontalAlignment.Center;
-                vb.VerticalAlignment = VerticalAlignment.Center;
-
-                TextBlock txt = new TextBlock(new Run(Unicode.getUnicodePiece(tmpPiece.number)));
-                txt.VerticalAlignment = VerticalAlignment.Center;
-                txt.HorizontalAlignment = HorizontalAlignment.Center;
-                txt.FontFamily = new FontFamily("Times New Romans");
-                vb.Child = txt;
-                tmp.Content = vb;
+                tmp.Content = createContentBidak(tmpPiece.number);
 
                 if (tmpPiece.number > 0)
                 {
@@ -760,7 +892,7 @@ namespace View
 
         }
 
-        private void addSisaPiece(Brush foreground, object Content)
+        public void addSisaPiece(Brush foreground, object Content)
         {
             //this.logicalCDC.getCountTakenPieces ditambah 1 karena logicalCDC move duluan, sehingga akan menyebabkan Index out of range
             //sisaPieceBlack = new Position(0, (Constant.COLUMN* 2) - (this.logicalCDC.getCountTakenPiecesBlack()+1));

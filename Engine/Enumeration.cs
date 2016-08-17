@@ -28,7 +28,7 @@ namespace Engine
 
     public enum NODE
     {
-        MIN,MAX,NONE
+        MIN=-1,MAX=1,NONE
     }
 
 

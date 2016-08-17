@@ -5,12 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Engine;
 using System.Diagnostics;
-using MyParallel;
 using System.Threading;
-using NMCTS;
-using SRCR = NMCTS_SR_CR;
-using SimpleTP = Experiment.SR.Tree;
-using SimpleTPVL = Experiment.SR.TreeVl;
+using SimpleTP = Parallelization.CR.Tree;
+using SimpleTPVL = Parallelization.CR.TreeVl;
 
 namespace Testing
 {
@@ -41,14 +38,16 @@ namespace Testing
             //    {
             //        total += tmp[s];
             //    }
-            //    int a = Shuffle.rouletteSelect(tmp);
+                //int a = Shuffle.rouletteSelect(new List<double>(){"0.2","0.5"});
             //    Console.WriteLine(total);
             //    if (a >= 14)
             //    {
             //        Console.WriteLine("errorr");
             //    }
             //}
-            testParallelSrVl();
+            //testTaskBlock();
+            //testNMCTS();
+            //testParallelSrVl();
             //testParallelSSAB();
             //consoleTesting();
 
@@ -100,6 +99,29 @@ namespace Testing
 
         static bool _lock=false;
         static object _locker = new object();
+        static void testTaskBlock()
+        {
+            //PCQueue a = new PCQueue(3);
+            Task<string> searchTree = null;
+
+
+            //searchTree = a.enqueueReturn(() => jalankanFor("A"));
+            //searchTree = a.enqueueReturn(() => jalankanFor("B"));
+            //searchTree = a.enqueueReturn(() => jalankanFor("C"));
+
+            //Console.WriteLine(searchTree.Result);
+            Console.WriteLine("hallo");
+        }
+
+        static string jalankanFor(string call)
+        {
+            for (int i = 0; i < 500; i++)
+            {
+                Console.WriteLine("TASK : " + Task.CurrentId + "," + Thread.CurrentThread.ManagedThreadId);
+                Console.WriteLine(call+":"+i);
+            }
+            return "SElesai";
+        }
         static void testLock(object var)
         {
             for (int i = 0; i < 100; i++)
@@ -117,26 +139,25 @@ namespace Testing
         {
             Board logicalCDC = new Board();
             logicalCDC.flip(3, 3);
-            SRCR.DeterministicNode.side = logicalCDC.sideToMove;
+            //SRCR.DeterministicNode.side = logicalCDC.sideToMove;
             Console.WriteLine("\nsidetoMove : " + logicalCDC.sideToMove);
             logicalCDC.flip(3, 4);
             while (logicalCDC.isEnd() == END_STATE.CONTINUE)
             {
                 Console.WriteLine("\nsidetoMove : " + logicalCDC.sideToMove);
-                SRCR.DeterministicNode a = new SRCR.DeterministicNode(logicalCDC.getBoardState(), null,NODE.NONE);
+                //SRCR.DeterministicNode a = new SRCR.DeterministicNode(logicalCDC.getBoardState(), null,NODE.NONE);
                 double x = 0;
                 for (int i = 0; i < 500; i++)
                 {
-                    a.selectAction();
-                    x += Node.s;
+                    //a.selectAction();
+                    //x += SimpleTP.Node.s;
                     //Console.WriteLine(Node.s);
                 }
-                Node.PGL = x / 500;
+                SimpleTP.Node.PGL = x / 500;
 
-                Console.WriteLine(Node.s);
 
                 Console.WriteLine("Mulai");
-                SRCR.DeterministicNode b = new SRCR.DeterministicNode(logicalCDC.getBoardState(), null, NODE.NONE);
+                SimpleTP.DeterministicNode b = null;//new SimpleTP.DeterministicNode(logicalCDC.getBoardState(), null, NODE.NONE);
 
                 for (int i = 0; i < 1000; i++)
                 {
@@ -144,7 +165,7 @@ namespace Testing
                     Console.WriteLine(i);
                 }
                 Console.WriteLine("End");
-                SRCR.Node maxWinRate = b.children[0];
+                SimpleTP.Node maxWinRate = b.children[0];
                 Console.WriteLine("0" + " , " + b.children[0].winRate + " , " + b.children[0].nVisits + " , " + b.children[0].action.from.ToString() + b.children[0].action.to.ToString());
                 for (int i = 1; i < b.children.Length; i++)
                 {
@@ -207,13 +228,13 @@ namespace Testing
         {
             Board logicalCDC = new Board();
             logicalCDC.flip(3, 3);
-            DeterministicNode.side = logicalCDC.sideToMove;
+            //DeterministicNode.side = logicalCDC.sideToMove;
             Console.WriteLine("\nsidetoMove : " + logicalCDC.sideToMove);
             logicalCDC.flip(3, 4);
             while (logicalCDC.isEnd() == END_STATE.CONTINUE)
             {
                 Console.WriteLine("\nsidetoMove : " + logicalCDC.sideToMove);
-                DeterministicNode a = new DeterministicNode(logicalCDC.getBoardState(), null, Constant.NONE, Constant.NONE);
+                SimpleTP.DeterministicNode a = new SimpleTP.DeterministicNode(logicalCDC.getBoardState(), null, Constant.NONE, Constant.NONE);
                 //double x = 0;
                 //for (int i = 0; i < 500; i++)
                 //{
@@ -222,12 +243,11 @@ namespace Testing
                 //    //Console.WriteLine(Node.s);
                 //}
                 //Node.PGL = x / 500;
-                Node.PGL = 0;
+                SimpleTP.Node.PGL = 0;
 
-                Console.WriteLine(Node.s);
 
                 Console.WriteLine("Mulai");
-                DeterministicNode b = new DeterministicNode(logicalCDC.getBoardState(), null, Constant.NONE, Constant.NONE);
+                SimpleTP.DeterministicNode b = new SimpleTP.DeterministicNode(logicalCDC.getBoardState(), null, Constant.NONE, Constant.NONE);
 
                 for (int i = 0; i < 5000; i++)
                 {
@@ -235,7 +255,7 @@ namespace Testing
                     Console.WriteLine(i);
                 }
                 Console.WriteLine("End");
-                Node maxWinRate = b.children[0];
+                SimpleTP.Node maxWinRate = b.children[0];
                 Console.WriteLine("0" + " , " + b.children[0].winRate + " , " + b.children[0].nVisits + " , " + b.children[0].action.from.ToString() + b.children[0].action.to.ToString());
                 for (int i = 1; i < b.children.Length; i++)
                 {
@@ -306,14 +326,14 @@ namespace Testing
                 Board board = new Board();
                 board.flip(0, 0);
                 SimpleTPVL.DeterministicNode.side = board.sideToMove;
-                SimpleTPVL.DeterministicNode b = new SimpleTPVL.DeterministicNode(board.getBoardState(), null);
+                SimpleTPVL.DeterministicNode b = new SimpleTPVL.DeterministicNode(board.getBoardState(), null, Constant.NONE, Constant.NONE);
                 double x = 0;
                 int u = 0;
                 List<SimpleTPVL.Node> visited = new List<SimpleTPVL.Node>();
                 SimpleTPVL.Node cur = b;
                 visited.Add(cur);
                 cur.expand();
-                cur.updateStatus(cur.rollOut(cur));
+                //cur.updateStatus(cur.rollOut(cur));
                 object a = new object();
                 ParallelOptions po = new ParallelOptions();
                 po.MaxDegreeOfParallelism = 100;
@@ -386,8 +406,8 @@ namespace Testing
                 //    x += Node.s;
                 //}//;
                 time.Stop();
-                Node.PGL = x / 500;
-                Console.WriteLine("PGL:" + Node.PGL);
+                SimpleTP.Node.PGL = x / 500;
+                Console.WriteLine("PGL:" + SimpleTP.Node.PGL);
                 Console.WriteLine(time.Elapsed.TotalSeconds);
             }
         }
@@ -402,14 +422,14 @@ namespace Testing
                 Board board = new Board();
                 board.flip(0, 0);
                 SimpleTP.DeterministicNode.side = board.sideToMove;
-                SimpleTP.DeterministicNode b = new SimpleTP.DeterministicNode(board.getBoardState(), null);
+                SimpleTP.DeterministicNode b = new SimpleTP.DeterministicNode(board.getBoardState(), null, Constant.NONE, Constant.NONE);
                 double x = 0;
                 int u = 0;
                 List<SimpleTP.Node> visited = new List<SimpleTP.Node>();
                 SimpleTP.Node cur = b;
                 visited.Add(cur);
                 cur.expand();
-                cur.updateStatus(cur.rollOut(cur));
+                //cur.updateStatus(cur.rollOut(cur));
                 object a = new object();
                 ParallelOptions po = new ParallelOptions();
                 po.MaxDegreeOfParallelism =2;
@@ -417,73 +437,14 @@ namespace Testing
                 List<string> threadid = new List<string>();
                 Parallel.For(0, 2000, po, i =>
                 {
-                    //lock (a)
-                    //{
-                    //    bool found = false;
-                    //    foreach (string y in threadid)
-                    //    {
-                    //        if (y == Thread.CurrentThread.ManagedThreadId.ToString())
-                    //        {
-                    //            found = true;
-                    //            break;
-                    //        }
-                    //    }
-                    //    if (!found)
-                    //    {
-                    //        threadid.Add(Thread.CurrentThread.ManagedThreadId.ToString());
-                    //    }
-                    //}
                     u++;
                     Console.WriteLine(u);
                     b.selectAction();
-                    //lock (a)
-                    //{
-                    //    while (!(cur.isLeaf()))
-                    //    {
-                    //        cur = cur.select();
-                    //        visited.Add(cur);
-                    //        if (cur is TP.NondeterministicNode)
-                    //        {
-                    //            if (((TP.NondeterministicNode)cur).selected != null)
-                    //            {
-                    //                cur = ((TP.NondeterministicNode)cur).selected;
-                    //            }
-                    //            else
-                    //            {
-                    //                cur = ((TP.NondeterministicNode)cur.select()).selected;
-                    //            }
-                    //            visited.Add(cur);
-                    //        }
-                    //    }
-                    //    cur.expand();
-                    //}
-                    //double value = cur.rollOut(cur);
-                    //foreach (TP.Node node in visited)
-                    //{
-                    //    node.updateStatus(value);
-                    //}
-                    //lock (a)
-                    //{
-                    //    x +=Node.s;
-                    //}
-                }//;
+                }
                 );
-
-                //foreach (string y in threadid)
-                //{
-                //    Console.WriteLine(y);
-                //}
-
-                //for (int i = 0; i < 2001; i++)
-                //{
-                //    Console.WriteLine(i);
-                //    b.selectAction(cur);
-                //    Console.WriteLine(i);
-                //    x += Node.s;
-                //}//;
                 time.Stop();
-                Node.PGL = x / 500;
-                Console.WriteLine("PGL:"+Node.PGL);
+                SimpleTP.Node.PGL = x / 500;
+                Console.WriteLine("PGL:" + SimpleTP.Node.PGL);
                 Console.WriteLine(time.Elapsed.TotalSeconds);
             }
         }
@@ -493,19 +454,19 @@ namespace Testing
 
         static void testParallelProject()
         {
-            var pcQ = new PCQueue(2);
+            //var pcQ = new PCQueue(2);
             var cancelSource = new CancellationTokenSource();
-            Task<bool> a =  pcQ.enqueueReturn(testPrintA);
-            Task<bool> b =  pcQ.enqueueReturn(testPrintB);
+            //Task<bool> a =  pcQ.enqueueReturn(testPrintA);
+            //Task<bool> b =  pcQ.enqueueReturn(testPrintB);
             
             //bool hasil = await pcQ.enqueue(testPrintA,cancelSource.Token);
             //bool hasil = await pcQ.enqueue(testPrintA);
 
             //Console.WriteLine(a.IsCompleted);
-            Console.WriteLine(a.Result);
-            Console.WriteLine("hai");
-            Console.WriteLine(b.Result);
-            Console.WriteLine("hai");
+            //Console.WriteLine(a.Result);
+            //Console.WriteLine("hai");
+            //Console.WriteLine(b.Result);
+            //Console.WriteLine("hai");
             //pcQ.Dispose();
         }
 
@@ -673,23 +634,28 @@ namespace Testing
 
         static void testNMCTS()
         {
-            Console.WriteLine((-(double.MaxValue)));
             Board a = new Board();
            
             a.flip(0,0);
-            DeterministicNode.side = a.sideToMove;
-            DeterministicNode b = new DeterministicNode(a.getBoardState(),null,Constant.NONE,Constant.NONE);
+            SimpleTP.DeterministicNode.side = a.sideToMove;
+            SimpleTP.DeterministicNode b = new SimpleTP.DeterministicNode(a.getBoardState(), null, Constant.NONE, Constant.NONE);
             double x=0;
-            for (int i = 0; i <240000; i++)
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
+            for (int i = 0; i <200; i++)
             {
-                //Console.WriteLine(i);
                 b.selectAction();
-                x += Node.s;
+                //Console.WriteLine(i);
+                //b.rollOut(b);
+                //x += SimpleTP.Node.s;
                 //Console.WriteLine(i);
             }
+            timer.Stop();
             Console.WriteLine(b.nVisits);
-            Console.WriteLine(Node.s);
-            Console.WriteLine(x/500);
+            Console.WriteLine(x);
+            Console.WriteLine(timer.Elapsed.Seconds);
+            //b.rollOut(b);
+            //Console.WriteLine(Node.s);
         }
 
         static void testSwitchFlippedPieceByPosition()

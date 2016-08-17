@@ -16,14 +16,17 @@
         </Grid.RowDefinitions>
         <Menu>
             <MenuItem Header="Game">
+                <MenuItem Header="Home" Click="menuHome_Click"/>
                 <MenuItem Header="Human Vs Human" Click="menuHumanVsHuman_Click"/>
                 <MenuItem Header="Human Vs Computer" Click="menuHumanVsComp_Click"/>
+                <!--<MenuItem Header="Example" Click="menuGenerate_Click"/>-->
             </MenuItem>
-            <MenuItem Header="Experiment" Click="menuPengujian_Click">
-            </MenuItem>
+            <!--<MenuItem Header="Experiment" Click="menuPengujian_Click">
+            </MenuItem>-->
             <MenuItem Header="View" >
                 <MenuItem Header="Options" Click="menuOptions_Click"/>
                 <MenuItem Header="Output" Click="menuOutput_Click"/>
+                <MenuItem Header="Tree" Click="menuTree_Click"/>
             </MenuItem>
             <MenuItem Header="Help" Click="menuBantuan_Click"></MenuItem>
             <MenuItem Header="About Us" Click="menuTentangKami_Click"></MenuItem>

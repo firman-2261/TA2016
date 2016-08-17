@@ -12,8 +12,12 @@ namespace View
     {
         public enum FIRST_PLAYER { Human, Computer }
         public enum SOUND { Enable, Disable }
-        public enum MOVING_SOUND { Bola,Copot,DoubleKlik,Klik,Laser,PageTurn,Pukulan,Senjata }
-        public enum ENDING_SOUND { Ding,LoudAlarm,MetalGong,News,TepukTangan }
+        public enum MOVING_SOUND { Bola, Copot, DoubleKlik, Klik, Laser, PageTurn, Pukulan, Senjata }
+        public enum ENDING_SOUND { Ding, LoudAlarm, MetalGong, News, TepukTangan }
+
+        public enum METODE { Root, Tree, TreeVirtualLoss }
+        public enum EVALUASI { Cumulative, Simple }
+
 
         [CategoryAttribute("Game"),
         DisplayName("First Player"),
@@ -50,6 +54,41 @@ namespace View
         {
             get;
             set;
+        }
+
+        [CategoryAttribute("Metode"),
+        DisplayName("Metode"),
+        DescriptionAttribute("Memilih metode parallel NMCTS yang akan digunakan komputer")]
+        public METODE Metode
+        {
+            get;
+            set;
+        }
+        [CategoryAttribute("Metode"),
+        DisplayName("Fungsi Evaluasi"),
+        DescriptionAttribute("Memilih fungsi evaluasi pada tahapan selection yang akan digunakan komputer")]
+        public EVALUASI Evaluasi
+        {
+            get;
+            set;
+        }
+
+        [CategoryAttribute("Metode"),
+         DisplayName("Waktu"),
+         DescriptionAttribute("Menentukan lamanya waktu melangkah komputer")]
+        public int MoveTime
+        {
+            set;
+            get;
+        }
+        
+        [CategoryAttribute("Metode"),
+        DisplayName("Jumlah Parallel Task"),
+        DescriptionAttribute("Menentukan jumlah parallel task yang akan digunakan komputer")]
+        public int ParallelTask
+        {
+            set;
+            get;
         }
     }
 }

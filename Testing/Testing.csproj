@@ -72,21 +72,9 @@
       <Project>{f6d096b8-4675-47f9-b701-ab741d2b5f50}</Project>
       <Name>Engine</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Experiment\Experiment.csproj">
+    <ProjectReference Include="..\Parallelization\Parallelization.csproj">
       <Project>{eb200a06-1d1f-48fc-accb-69e02e887f9f}</Project>
-      <Name>Experiment</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MyParallel\MyParallel.csproj">
-      <Project>{507db411-134f-4724-9769-3410d7283ef4}</Project>
-      <Name>MyParallel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NMCTS\NMCTS.csproj">
-      <Project>{6aea058d-e07b-4e21-8f0c-33e5b67779d1}</Project>
-      <Name>NMCTS</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NMCTS_SR_CR\NMCTS_SR_CR.csproj">
-      <Project>{17179028-f251-4097-ae88-4887ced791b9}</Project>
-      <Name>NMCTS_SR_CR</Name>
+      <Name>Parallelization</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

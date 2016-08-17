@@ -14,5 +14,17 @@
     <Setting Name="EndingSound" Type="System.String" Scope="User">
       <Value Profile="(Default)">TepukTangan</Value>
     </Setting>
+    <Setting Name="Metode" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Tree</Value>
+    </Setting>
+    <Setting Name="Evaluasi" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Simple</Value>
+    </Setting>
+    <Setting Name="MoveTime" Type="System.String" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="ParallelTask" Type="System.String" Scope="User">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

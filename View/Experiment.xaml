@@ -34,20 +34,12 @@
                 </Grid.ColumnDefinitions>
 
 
-                <Label Grid.Row="0" Grid.Column="0">Jumlah Paralel Thread (n)</Label>
+                <Label Grid.Row="0" Grid.Column="0">Jumlah Paralel Task (n)</Label>
                 <Label Grid.Row="1" Grid.Column="0">Waktu Satu Kali Move (s)</Label>
                 <Label Grid.Row="2" Grid.Column="0">Jumlah Pertandingan</Label>
                 <xctk:IntegerUpDown Name="jlhThread" Maximum="64" Minimum="2" Value="2" Grid.Row="0" Grid.Column="1" Margin="4" Increment="2" />
                 <xctk:IntegerUpDown Name="wktMove" Maximum="120" Value="5" Grid.Row="1" Grid.Column="1" Margin="4"/>
-                <xctk:IntegerUpDown Name="jlhPertandingan" Maximum="400" Value="10" Grid.Row="2" Grid.Column="1" Margin="4"/>
-                <Label Grid.Row="0" Grid.Column="2">Nilai bias SR</Label>
-                <Label Grid.Row="1" Grid.Column="2">Nilai bias CR</Label>
-                <xctk:DoubleUpDown Name="nilaiCR" Maximum="10" Value="0.75" Grid.Row="1" Grid.Column="3" Margin="4" />
-                <xctk:DoubleUpDown Name="nilaiSR" Maximum="10" Value="0.75" Grid.Row="0" Grid.Column="3" Margin="4" />
-                <Label Grid.Row="0" Grid.Column="4">Nilai Konstanta Positif SSAB</Label>
-                <Label Grid.Row="1" Grid.Column="4">Jumlah Simulasi PGL</Label>
-                <xctk:DoubleUpDown Name="nilaiSSAB" Maximum="10" Value="0.01" Grid.Row="0" Grid.Column="5" Margin="4"/>
-                <xctk:IntegerUpDown Name="nilaiPGL" Maximum="1000" Value="500" Grid.Row="1" Grid.Column="5" Margin="4"/>
+                <xctk:IntegerUpDown Name="jlhPertandingan" Maximum="400" Value="45" Grid.Row="2" Grid.Column="1" Margin="4"/>
                 <RadioButton IsChecked="True"  Name="radioCR" Grid.Row="0" Grid.Column="6" Content="Fungsi Evaluasi CR" VerticalAlignment="Center" Margin="4"/>
                 <RadioButton Name="radioSRCR" Grid.Row="1" Grid.Column="6" Content="Fungsi Evaluasi CR + SR" VerticalAlignment="Center" Margin="4"/>
             </Grid>

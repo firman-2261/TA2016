@@ -510,9 +510,9 @@ namespace Engine
         /// Digunakan untuk generate score CESPF
         /// </summary>
         /// <returns></returns>
-        private int getScoreCESPF(Position positionMeat,int totalScore)
+        private double getScoreCESPF(Position positionMeat,double totalScore)
         {
-            int score=0;
+            double score=0;
             if (this.array[positionMeat.row, positionMeat.column].number == Constant.BLACK_KING || this.array[positionMeat.row, positionMeat.column].number == Constant.RED_KING)
             {
                 score = Constant.KING_SCORE/totalScore;
@@ -548,34 +548,34 @@ namespace Engine
         /// Digunakan untuk generate total score CESPF
         /// </summary>
         /// <returns></returns>
-        private int getTotalScoreCESPF(Position positionEater, List<Position> positionMeat)
+        private double getTotalScoreCESPF(Position positionEater, List<Position> positionMeat)
         {
-            int totalScore = 0;
+            double totalScore = 0;
             foreach (Position x in positionMeat)
             {
                 if (!isPositionEmpty(x.row, x.column))
                 {
-                    if (this.array[positionEater.row, positionEater.column].number == Constant.BLACK_KING || this.array[positionEater.row, positionEater.column].number == Constant.RED_KING)
+                    if (this.array[x.row, x.column].number == Constant.BLACK_KING || this.array[x.row, x.column].number == Constant.RED_KING)
                     {
                         totalScore += Constant.KING_SCORE;
                     }
-                    else if (this.array[positionEater.row, positionEater.column].number == Constant.BLACK_GUARD || this.array[positionEater.row, positionEater.column].number == Constant.RED_GUARD)
+                    else if (this.array[x.row, x.column].number == Constant.BLACK_GUARD || this.array[x.row, x.column].number == Constant.RED_GUARD)
                     {
                         totalScore += Constant.GUARD_SCORE;
                     }
-                    else if (this.array[positionEater.row, positionEater.column].number == Constant.BLACK_MINISTER || this.array[positionEater.row, positionEater.column].number == Constant.RED_MINISTER)
+                    else if (this.array[x.row, x.column].number == Constant.BLACK_MINISTER || this.array[x.row, x.column].number == Constant.RED_MINISTER)
                     {
                         totalScore += Constant.MINISTER_SCORE;
                     }
-                    else if (this.array[positionEater.row, positionEater.column].number == Constant.BLACK_ROOK || this.array[positionEater.row, positionEater.column].number == Constant.RED_ROOK)
+                    else if (this.array[x.row, x.column].number == Constant.BLACK_ROOK || this.array[x.row, x.column].number == Constant.RED_ROOK)
                     {
                         totalScore += Constant.ROOK_SCORE;
                     }
-                    else if (this.array[positionEater.row, positionEater.column].number == Constant.BLACK_KNIGHT || this.array[positionEater.row, positionEater.column].number == Constant.RED_KNIGHT)
+                    else if (this.array[x.row, x.column].number == Constant.BLACK_KNIGHT || this.array[x.row, x.column].number == Constant.RED_KNIGHT)
                     {
                         totalScore += Constant.KNIGHT_SCORE;
                     }
-                    else if (this.array[positionEater.row, positionEater.column].number == Constant.BLACK_CANNON || this.array[positionEater.row, positionEater.column].number == Constant.RED_CANNON)
+                    else if (this.array[x.row, x.column].number == Constant.BLACK_CANNON || this.array[x.row, x.column].number == Constant.RED_CANNON)
                     {
                         totalScore += Constant.CANNON_SCORE;
                     }
@@ -623,14 +623,19 @@ namespace Engine
             {
                 throw new InvalidOperationException("List yang dimasukkan kosong");
             }
-            //urutkan terlebih dahulu elemennya dari yang terkecil ke yang terbesar
-            var moveSort = from element in move orderby element.score select element;
+            //urutkan terlebih dahulu elemennya dari yang terbesar ke yang terkecil
+            var moveSort = from element in move orderby element.score descending select element;
+            //if (move.Count > 1)
+            //{
+            //    Console.WriteLine("");
+            //}
             foreach (CESPFMove x in moveSort)
             {
                 List<Position> m = generateMove(x.move.to.row, x.move.to.column);
-                //jika setelah digenerate ternyata ada langkah untuk escape, maka random langkah yang tersedia
+                //jika setelah digenerate ternyata ada langkah untuk escape
                 if (m.Count != 0)
                 {
+                    //selainnya , maka random langkah yang tersedia
                     int index = Shuffle.rnd.Next(0, m.Count);
                     return new CESPFMove(new Move(new Position(x.move.to.row, x.move.to.column), new Position(m[index].row, m[index].column)), x.score);
                 }
@@ -662,7 +667,7 @@ namespace Engine
                                 if (isFlipped(i, j))
                                 {
                                     List<Position> tmp = generateMove(i, j);
-                                    int totalScore = getTotalScoreCESPF(new Position(i, j), tmp);
+                                    double totalScore = getTotalScoreCESPF(new Position(i, j), tmp);
                                     //Jika totalScore tidak sama dengan nol, maka ada piece yang dapat dimakan
                                     if (totalScore != 0)
                                     {
@@ -699,6 +704,7 @@ namespace Engine
         /// <returns> null jika tidak ada bidak yang dapat di capture</returns>
         private CESPFMove getEscapeMoveCESPF()
         {
+            this.sideToMove *= -1;
             List<CESPFMove> move = new List<CESPFMove>();
             //1. Ada kemungkinan melarikan diri dari bidak lawan
             for (int i = 0; i < Constant.ROW; i++)
@@ -708,7 +714,7 @@ namespace Engine
                     if (!this.isPositionEmpty(i, j))
                     {
                         //Mengambil bidak lawan
-                        if (!isSameSide(this.array[i, j], this.sideToMove))
+                        if (isSameSide(this.array[i, j], this.sideToMove))
                         {
                             if (!isPositionEmpty(i, j))
                             {
@@ -716,7 +722,7 @@ namespace Engine
                                 if (isFlipped(i, j))
                                 {
                                     List<Position> tmp = generateMove(i, j);
-                                    int totalScore = getTotalScoreCESPF(new Position(i, j), tmp);
+                                    double totalScore = getTotalScoreCESPF(new Position(i, j), tmp);
                                     //Jika totalScore tidak sama dengan nol, maka ada piece yang dapat dimakan
                                     if (totalScore != 0)
                                     {
@@ -735,7 +741,7 @@ namespace Engine
                     }
                 }
             }
-
+            this.sideToMove *= -1;
             if (move.Count != 0)
             {
                 return getBestEscapeMoveCESPF(move);
@@ -1101,7 +1107,7 @@ namespace Engine
                 bitboard = tmp.bitboard;
                 foreach (Position x in tmp.position)
                 {
-                    //lakukan agar hanya memakan bidak kawan
+                    //lakukan agar hanya memakan bidak lawan
                     if (!isSameSide(this.array[x.row, x.column], this.sideToMove))
                     {
                         //Console.WriteLine(this.sideToMove);
