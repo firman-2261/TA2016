@@ -15,6 +15,20 @@ namespace Testing
     {
         static void Main(string[] args)
         {
+            Stopwatch a = Stopwatch.StartNew();
+            //a.Restart();
+            Console.WriteLine(a.Elapsed.TotalSeconds);
+            Console.WriteLine(a.Elapsed.TotalSeconds);
+            Console.WriteLine(a.Elapsed.TotalSeconds);
+            Console.WriteLine(a.Elapsed.TotalSeconds);
+            Console.WriteLine(a.Elapsed.TotalSeconds);
+            Console.WriteLine(a.Elapsed.TotalSeconds);
+            Console.WriteLine(a.Elapsed.TotalSeconds);
+            Console.WriteLine(a.Elapsed.TotalSeconds);
+            //a.Restart();
+            Console.WriteLine("ulang");
+            Console.WriteLine(a.Elapsed.TotalSeconds);
+            Console.WriteLine(a.Elapsed.TotalSeconds);
             //for (int i = 0; i < 1; i++)
             //{
             //    Console.WriteLine("ke-"+i);
@@ -685,29 +699,29 @@ namespace Testing
 
         static void testListRefOrValue()
         {
-            Board a = new Board();
-            a.flip(0, 0);
-            int nActions = a.getCountActions();
-            List<TreeNode>[] children = new List<TreeNode>[nActions];
-            for (int i = 0; i < nActions; i++)
-            {
-                Console.WriteLine(children[i]);
-                //children[i] = new TreeNode();
-            }
-            children[0][0] = new TreeNode(a.getBoardState());
+            //Board a = new Board();
+            //a.flip(0, 0);
+            //int nActions = a.getCountActions();
+            //List<TreeNode>[] children = new List<TreeNode>[nActions];
+            //for (int i = 0; i < nActions; i++)
+            //{
+            //    Console.WriteLine(children[i]);
+            //    //children[i] = new TreeNode();
+            //}
+            //children[0][0] = new TreeNode(a.getBoardState());
         }
 
         static void testArrayOfList()
         {
-            Board a = new Board();
-            a.flip(0, 0);
-            int nActions = a.getCountActions();
-            List<TreeNode>[] children = new List<TreeNode>[nActions];
-            for (int i = 0; i < nActions; i++)
-            {
-                Console.WriteLine(children[i]);
-                //children[i] = new TreeNode();
-            }
+            //Board a = new Board();
+            //a.flip(0, 0);
+            //int nActions = a.getCountActions();
+            ////List<TreeNode>[] children = new List<TreeNode>[nActions];
+            //for (int i = 0; i < nActions; i++)
+            //{
+            //    Console.WriteLine(children[i]);
+            //    //children[i] = new TreeNode();
+            //}
         }
 
         static void getCountActions()

@@ -50,6 +50,7 @@
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
             <Border Grid.Column="0"  BorderBrush="Black" Margin="10" CornerRadius="5" BorderThickness="1">
@@ -72,6 +73,13 @@
                     <Button Padding="20" Margin="0 20 0 0" Click="onClick_TPLMVL">Self-Play n with n/2</Button>
                 </StackPanel>
             </Border>
+
+            <Border Grid.Column="3" BorderBrush="Black" Margin="10" CornerRadius="5" BorderThickness="1">
+                <StackPanel Margin="5" >
+                    <TextBlock TextWrapping="WrapWithOverflow" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" >Keadaan Permainan Sama</TextBlock>
+                    <Button Padding="20" Margin="0 20 0 0" Click="onClick_same">Self-Play n with n/2</Button>
+                </StackPanel>
+            </Border>
         </Grid>
 
         <Grid Grid.Row="2" Height="250" Margin="10">
@@ -89,6 +97,7 @@
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
             <Border BorderBrush="Black" Margin="10" CornerRadius="5" BorderThickness="1">
@@ -99,6 +108,9 @@
             </Border>
             <Border Grid.Column="2" BorderBrush="Black" Margin="10" CornerRadius="5" BorderThickness="1">
                 <TextBox IsReadOnly="True" Name="txtTPLMVL"></TextBox>
+            </Border>
+            <Border Grid.Column="3" BorderBrush="Black" Margin="10" CornerRadius="5" BorderThickness="1">
+                <TextBox IsReadOnly="True" Name="txtSame"></TextBox>
             </Border>
         </Grid>
     </Grid>

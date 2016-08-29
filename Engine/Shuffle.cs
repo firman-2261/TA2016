@@ -127,6 +127,13 @@ namespace Engine
             double value = rnd.NextDouble();
             for (int i = 0; i < (weight.Count-1); i++)
             {
+                if (i == 0)
+                {
+                    if (value <= cumulative[0])
+                    {
+                        return i;
+                    }
+                }
                 if (value >= cumulative[i] && value <= cumulative[i + 1])
                 {
                     return i;

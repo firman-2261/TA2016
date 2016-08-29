@@ -54,6 +54,7 @@ namespace View
             index = 1;
 
             inisiasi(true);
+
         }
 
         private int index; // digunakan untuk menampilkan index
@@ -364,7 +365,7 @@ namespace View
                 }
             }
         }
-        static Stopwatch timer = new Stopwatch();
+
         private void switchTurn()
         {
             END_STATE tmpResult = this.logicalCDC.isEnd();
@@ -416,13 +417,13 @@ namespace View
                     changeDisable();
                     if (this.tournament == TOURNAMENT.HUMAN_VS_COMPUTER)
                     {
-                        timer.Reset();
                         Task.Run(() =>
                         {
                             string metode = Properties.Settings.Default["Metode"].ToString();
                             string fungsiEvaluasi = Properties.Settings.Default["Evaluasi"].ToString();
                             int jlhParallelTask = int.Parse(Properties.Settings.Default["ParallelTask"].ToString());
                             int moveTime = int.Parse(Properties.Settings.Default["MoveTime"].ToString());
+
                             if (metode.Equals("Root"))
                             {
                                 if (fungsiEvaluasi.Equals("Cumulative"))

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Diagnostics; 
 using Engine;
 
 namespace Parallelization.CR.Root
@@ -22,10 +23,7 @@ namespace Parallelization.CR.Root
         public Node startNMCTS()
         {
             taskQueue jlhParallelThread = new taskQueue(base.jlhParallel);
-            timer.Start();
-
             Task<DeterministicNode>[] searchTree = new Task<DeterministicNode>[base.jlhParallel];
-
             for (int i = 0; i < base.jlhParallel; i++)
             {
                 searchTree[i] = jlhParallelThread.enqueueReturn(move);
@@ -101,14 +99,16 @@ namespace Parallelization.CR.Root
             DeterministicNode searchTree = new DeterministicNode(this.board.getBoardState(), null, Constant.NONE, Constant.NONE);
             searchTree.expand();
             searchTree.updateStatus(searchTree.rollOut(), searchTree.s);
+            timer.Start();
             while (timer.Elapsed.TotalSeconds <= base.wktThinking)
             {
                 //if (base.isVerboseRunning)
                 //{
-                //    Console.WriteLine("Left Time : " + (wktThinking - timer.Elapsed.TotalSeconds));
+                    //Console.WriteLine("Left Time : " + (wktThinking - timer.Elapsed.TotalSeconds));
                 //}
                 searchTree.selectAction();
             }
+
             return searchTree;
         }
 

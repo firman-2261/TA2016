@@ -35,12 +35,12 @@ namespace View
         public Experiment()
         {
             InitializeComponent();
-            
         }
 
         Board board;
         PLAYER currentTurn;
         int side;
+        Board tmpBoard;
         private void onClick_RP(object obj, RoutedEventArgs e)
         {
            
@@ -50,63 +50,7 @@ namespace View
             for (int m = 0; m < jlhPertandingan.Value.Value; m++) 
             {
                 inisiasiGame();
-                double jlhSimulasi = 0;
-                int panjangPermainan = 0;
-                if (radioCR.IsChecked.Value)
-                {
-                    while (board.isEnd() == END_STATE.CONTINUE)
-                    {
-                        if (currentTurn == PLAYER.COMPUTER)
-                        {
-                            cumulativeRP.RootParallelization a = new cumulativeRP.RootParallelization(jlhThread.Value.Value/2,wktMove.Value.Value, this.board.getBoardState());
-                            a.setPGLValue();
-                            cumulativeRP.Node tmp = a.startNMCTS();
-                            action(tmp.action.from, tmp.action.to);
-                            Console.WriteLine("CURRENT TURN : COMPUTER");
-                            Console.WriteLine("SIMULASI : " + a.getTotalSimulasi());
-                        }
-                        else
-                        {
-                            panjangPermainan++;
-                            cumulativeRP.RootParallelization a = new cumulativeRP.RootParallelization(jlhThread.Value.Value, wktMove.Value.Value, this.board.getBoardState());
-                            a.setPGLValue();
-                            cumulativeRP.Node tmp = a.startNMCTS();
-                            action(tmp.action.from, tmp.action.to);
-                            jlhSimulasi += a.getTotalSimulasi();
-                            Console.WriteLine("CURRENT TURN : HUMAN");
-                            Console.WriteLine("SIMULASI : " + a.getTotalSimulasi());
-                        }
-                    }
-                }
-                else
-                {
-                    while (board.isEnd() == END_STATE.CONTINUE)
-                    {
-                        if (currentTurn == PLAYER.COMPUTER)
-                        {
-                            SimpleCumulativeRP.RootParallelization a = new SimpleCumulativeRP.RootParallelization(jlhThread.Value.Value/2, wktMove.Value.Value, this.board.getBoardState());
-                            a.setPGLValue();
-                            SimpleCumulativeRP.Node tmp = a.startNMCTS();
-                            action(tmp.action.from, tmp.action.to);
-                            Console.WriteLine("CURRENT TURN : COMPUTER");
-                            Console.WriteLine("SIMULASI : " + a.getTotalSimulasi());
-                        }
-                        else
-                        {
-                            panjangPermainan++;
-                            SimpleCumulativeRP.RootParallelization a = new SimpleCumulativeRP.RootParallelization(jlhThread.Value.Value, wktMove.Value.Value, this.board.getBoardState());
-                            a.setPGLValue();
-                            SimpleCumulativeRP.Node tmp = a.startNMCTS();
-                            action(tmp.action.from, tmp.action.to);
-                            jlhSimulasi += a.getTotalSimulasi();
-                            Console.WriteLine("CURRENT TURN : HUMAN");
-                            Console.WriteLine("SIMULASI : " + a.getTotalSimulasi());
-                        }
-                    }
-                }
-
-                dg.Items.Add(new Result(m + 1, getResult(), jlhSimulasi / panjangPermainan));
-
+                RP(m, jlhThread.Value.Value, board);
             };
             Kesimpulan tmpKesimpulan = calculateKesimpulan();
             txtRP.Clear();
@@ -118,74 +62,11 @@ namespace View
             dg.Items.Clear();
             this.txtTPLM.Text = "";
             DateTime mulaiEksekusi = DateTime.Now;
-            //int length = 0;
-            //Stopwatch timerku = new System.Diagnostics.Stopwatch();
             for (int m = 0; m < jlhPertandingan.Value.Value; m++) 
             {
                 inisiasiGame();
-                double jlhSimulasi = 0;
-                int panjangPermainan = 0;
-                if (radioCR.IsChecked.Value)
-                {
-                    //timerku.Start();
-                    while (board.isEnd() == END_STATE.CONTINUE)
-                    {
-                        //length++;
-                        if (currentTurn == PLAYER.COMPUTER)
-                        {
-                            cumulativeTP.TreeParallelization a = new cumulativeTP.TreeParallelization(jlhThread.Value.Value / 2, wktMove.Value.Value, this.board.getBoardState());
-                            a.setPGLValue();
-                            cumulativeTP.Node tmp = a.startNMCTS();
-                            action(tmp.action.from, tmp.action.to);
-                            Console.WriteLine("CURRENT TURN : COMPUTER");
-                            Console.WriteLine("SIMULASI : " + a.getTotalSimulasi());
-                        }
-                        else
-                        {
-                            panjangPermainan++;
-                            cumulativeTP.TreeParallelization a = new cumulativeTP.TreeParallelization(jlhThread.Value.Value, wktMove.Value.Value, this.board.getBoardState());
-                            a.setPGLValue();
-                            cumulativeTP.Node tmp = a.startNMCTS();
-                            action(tmp.action.from, tmp.action.to);
-                            jlhSimulasi += a.getTotalSimulasi();
-                            Console.WriteLine("CURRENT TURN : HUMAN");
-                            Console.WriteLine("SIMULASI : " + a.getTotalSimulasi());
-                        }
-                    }
-                    //timerku.Stop();
-                }
-                else
-                {
-                    while (board.isEnd() == END_STATE.CONTINUE)
-                    {
-                        if (currentTurn == PLAYER.COMPUTER)
-                        {
-                            SimpleCumulativeTP.TreeParallelization a = new SimpleCumulativeTP.TreeParallelization(jlhThread.Value.Value / 2, wktMove.Value.Value, this.board.getBoardState());
-                            a.setPGLValue();
-                            SimpleCumulativeTP.Node tmp = a.startNMCTS();
-                            action(tmp.action.from, tmp.action.to);
-                            Console.WriteLine("CURRENT TURN : COMPUTER");
-                            Console.WriteLine("SIMULASI : " + a.getTotalSimulasi());
-                        }
-                        else
-                        {
-                            panjangPermainan++;
-                            SimpleCumulativeTP.TreeParallelization a = new SimpleCumulativeTP.TreeParallelization(jlhThread.Value.Value, wktMove.Value.Value, this.board.getBoardState());
-                            a.setPGLValue();
-                            SimpleCumulativeTP.Node tmp = a.startNMCTS();
-                            action(tmp.action.from, tmp.action.to);
-                            jlhSimulasi += a.getTotalSimulasi();
-                            Console.WriteLine("CURRENT TURN : HUMAN");
-                            Console.WriteLine("SIMULASI : " + a.getTotalSimulasi());
-                        }
-                    }
-                }
-
-                dg.Items.Add(new Result(m + 1, getResult(), jlhSimulasi / panjangPermainan));
-
+                TPLM(m,jlhThread.Value.Value,board);
             };
-            //Console.WriteLine("Length Of Permainan : " + length);
-            //Console.WriteLine("Lama waktu  : " + timerku.Elapsed.TotalMinutes);
             Kesimpulan tmpKesimpulan = calculateKesimpulan();
             txtTPLM.Clear();
             txtTPLM.Text = tmpKesimpulan.getKesimpulan();
@@ -199,62 +80,7 @@ namespace View
             for (int m = 0; m < jlhPertandingan.Value.Value; m++) 
             {
                 inisiasiGame();
-                double jlhSimulasi = 0;
-                int panjangPermainan = 0;
-                if (radioCR.IsChecked.Value)
-                {
-                    while (board.isEnd() == END_STATE.CONTINUE)
-                    {
-                        if (currentTurn == PLAYER.COMPUTER)
-                        {
-                            cumulativeTPVL.TreeParallelization a = new cumulativeTPVL.TreeParallelization(jlhThread.Value.Value / 2, wktMove.Value.Value, this.board.getBoardState());
-                            a.setPGLValue();
-                            cumulativeTPVL.Node tmp = a.startNMCTS();
-                            action(tmp.action.from, tmp.action.to);
-                            Console.WriteLine("CURRENT TURN : COMPUTER");
-                            Console.WriteLine("SIMULASI : " + a.getTotalSimulasi());
-                        }
-                        else
-                        {
-                            panjangPermainan++;
-                            cumulativeTPVL.TreeParallelization a = new cumulativeTPVL.TreeParallelization(jlhThread.Value.Value, wktMove.Value.Value, this.board.getBoardState());
-                            a.setPGLValue();
-                            cumulativeTPVL.Node tmp = a.startNMCTS();
-                            action(tmp.action.from, tmp.action.to);
-                            jlhSimulasi += a.getTotalSimulasi();
-                            Console.WriteLine("CURRENT TURN : HUMAN");
-                            Console.WriteLine("SIMULASI : " + a.getTotalSimulasi());
-                        }
-                    }
-                }
-                else
-                {
-                    while (board.isEnd() == END_STATE.CONTINUE)
-                    {
-                        if (currentTurn == PLAYER.COMPUTER)
-                        {
-                            SimpleCumulativeTPVL.TreeParallelization a = new SimpleCumulativeTPVL.TreeParallelization(jlhThread.Value.Value / 2, wktMove.Value.Value, this.board.getBoardState());
-                            a.setPGLValue();
-                            SimpleCumulativeTPVL.Node tmp = a.startNMCTS();
-                            action(tmp.action.from, tmp.action.to);
-                            Console.WriteLine("CURRENT TURN : COMPUTER");
-                            Console.WriteLine("SIMULASI : " + a.getTotalSimulasi());
-                        }
-                        else
-                        {
-                            panjangPermainan++;
-                            SimpleCumulativeTPVL.TreeParallelization a = new SimpleCumulativeTPVL.TreeParallelization(jlhThread.Value.Value, wktMove.Value.Value, this.board.getBoardState());
-                            a.setPGLValue();
-                            SimpleCumulativeTPVL.Node tmp = a.startNMCTS();
-                            action(tmp.action.from, tmp.action.to);
-                            jlhSimulasi += a.getTotalSimulasi();
-                            Console.WriteLine("CURRENT TURN : HUMAN");
-                            Console.WriteLine("SIMULASI : " + a.getTotalSimulasi());
-                        }
-                    }
-                }
-
-                dg.Items.Add(new Result(m + 1, getResult(), jlhSimulasi/panjangPermainan));
+                TPLMVL(m,jlhThread.Value.Value,board);
             };
 
             Kesimpulan tmpKesimpulan = calculateKesimpulan();
@@ -262,6 +88,225 @@ namespace View
             txtTPLMVL.Text = tmpKesimpulan.getKesimpulan();
             writeToFile("TPLMVL_" + ((radioCR.IsChecked.Value) ? "CR" : "CR_SR")+"_"+jlhThread.Value.Value.ToString()+"_"+wktMove.Value.Value.ToString()+"_"+jlhPertandingan.Value.Value.ToString(),tmpKesimpulan,mulaiEksekusi);
         }
+
+        private void TPLM(int i,int jlhThread,Board board)
+        {
+            double jlhSimulasi = 0;
+            int panjangPermainan = 0;
+            if (radioCR.IsChecked.Value)
+            {
+                while (board.isEnd() == END_STATE.CONTINUE)
+                {
+                    if (currentTurn == PLAYER.COMPUTER)
+                    {
+                        cumulativeTP.TreeParallelization a = new cumulativeTP.TreeParallelization(jlhThread / 2, wktMove.Value.Value, board.getBoardState(),false);
+                        a.setPGLValue();
+                        cumulativeTP.Node tmp = a.startNMCTS();
+                        action(tmp.action.from, tmp.action.to, board);
+                    }
+                    else
+                    {
+                        panjangPermainan++;
+                        cumulativeTP.TreeParallelization a = new cumulativeTP.TreeParallelization(jlhThread, wktMove.Value.Value, board.getBoardState(), false);
+                        a.setPGLValue();
+                        cumulativeTP.Node tmp = a.startNMCTS();
+                        action(tmp.action.from, tmp.action.to, board);
+                        jlhSimulasi += a.getTotalSimulasi();
+                    }
+                }
+            }
+            else
+            {
+                while (board.isEnd() == END_STATE.CONTINUE)
+                {
+                    if (currentTurn == PLAYER.COMPUTER)
+                    {
+                        SimpleCumulativeTP.TreeParallelization a = new SimpleCumulativeTP.TreeParallelization(jlhThread / 2, wktMove.Value.Value, board.getBoardState(), false);
+                        a.setPGLValue();
+                        SimpleCumulativeTP.Node tmp = a.startNMCTS();
+                        action(tmp.action.from, tmp.action.to, board);
+                    }
+                    else
+                    {
+                        panjangPermainan++;
+                        SimpleCumulativeTP.TreeParallelization a = new SimpleCumulativeTP.TreeParallelization(jlhThread, wktMove.Value.Value, board.getBoardState(), false);
+                        a.setPGLValue();
+                        SimpleCumulativeTP.Node tmp = a.startNMCTS();
+                        action(tmp.action.from, tmp.action.to, board);
+                        jlhSimulasi += a.getTotalSimulasi();
+                    }
+                }
+            }
+
+            dg.Items.Add(new Result(i + 1, getResult(), jlhSimulasi / panjangPermainan));
+        }
+        private void TPLMVL(int i,int jlhThread,Board board)
+        {
+            double jlhSimulasi = 0;
+            int panjangPermainan = 0;
+            if (radioCR.IsChecked.Value)
+            {
+                while (board.isEnd() == END_STATE.CONTINUE)
+                {
+                    if (currentTurn == PLAYER.COMPUTER)
+                    {
+                        cumulativeTPVL.TreeParallelization a = new cumulativeTPVL.TreeParallelization(jlhThread / 2, wktMove.Value.Value, board.getBoardState(), false);
+                        a.setPGLValue();
+                        cumulativeTPVL.Node tmp = a.startNMCTS();
+                        action(tmp.action.from, tmp.action.to, board);
+                    }
+                    else
+                    {
+                        panjangPermainan++;
+                        cumulativeTPVL.TreeParallelization a = new cumulativeTPVL.TreeParallelization(jlhThread, wktMove.Value.Value, board.getBoardState(), false);
+                        a.setPGLValue();
+                        cumulativeTPVL.Node tmp = a.startNMCTS();
+                        action(tmp.action.from, tmp.action.to, board);
+                        jlhSimulasi += a.getTotalSimulasi();
+                    }
+                }
+            }
+            else
+            {
+                while (board.isEnd() == END_STATE.CONTINUE)
+                {
+                    if (currentTurn == PLAYER.COMPUTER)
+                    {
+                        SimpleCumulativeTPVL.TreeParallelization a = new SimpleCumulativeTPVL.TreeParallelization(jlhThread / 2, wktMove.Value.Value, board.getBoardState(), false);
+                        a.setPGLValue();
+                        SimpleCumulativeTPVL.Node tmp = a.startNMCTS();
+                        action(tmp.action.from, tmp.action.to,board);
+                    }
+                    else
+                    {
+                        panjangPermainan++;
+                        SimpleCumulativeTPVL.TreeParallelization a = new SimpleCumulativeTPVL.TreeParallelization(jlhThread, wktMove.Value.Value, board.getBoardState(), false);
+                        a.setPGLValue();
+                        SimpleCumulativeTPVL.Node tmp = a.startNMCTS();
+                        action(tmp.action.from, tmp.action.to,board);
+                        jlhSimulasi += a.getTotalSimulasi();
+                    }
+                }
+            }
+
+            dg.Items.Add(new Result(i + 1, getResult(), jlhSimulasi / panjangPermainan));
+        }
+        private void RP(int i,int jlhThread,Board board)
+        {
+            double jlhSimulasi = 0;
+            int panjangPermainan = 0;
+            if (radioCR.IsChecked.Value)
+            {
+                while (board.isEnd() == END_STATE.CONTINUE)
+                {
+                    if (currentTurn == PLAYER.COMPUTER)
+                    {
+                        cumulativeRP.RootParallelization a = new cumulativeRP.RootParallelization(jlhThread / 2, wktMove.Value.Value, board.getBoardState(), false);
+                        a.setPGLValue();
+                        cumulativeRP.Node tmp = a.startNMCTS();
+                        action(tmp.action.from, tmp.action.to, board);
+                    }
+                    else
+                    {
+                        panjangPermainan++;
+                        cumulativeRP.RootParallelization a = new cumulativeRP.RootParallelization(jlhThread, wktMove.Value.Value, board.getBoardState(), false);
+                        a.setPGLValue();
+                        cumulativeRP.Node tmp = a.startNMCTS();
+                        action(tmp.action.from, tmp.action.to, board);
+                        jlhSimulasi += a.getTotalSimulasi();
+                    }
+                }
+            }
+            else
+            {
+                while (board.isEnd() == END_STATE.CONTINUE)
+                {
+                    if (currentTurn == PLAYER.COMPUTER)
+                    {
+                        SimpleCumulativeRP.RootParallelization a = new SimpleCumulativeRP.RootParallelization(jlhThread / 2, wktMove.Value.Value, board.getBoardState(), false);
+                        a.setPGLValue();
+                        SimpleCumulativeRP.Node tmp = a.startNMCTS();
+                        action(tmp.action.from, tmp.action.to,board);
+                    }
+                    else
+                    {
+                        panjangPermainan++;
+                        SimpleCumulativeRP.RootParallelization a = new SimpleCumulativeRP.RootParallelization(jlhThread, wktMove.Value.Value, board.getBoardState(), false);
+                        a.setPGLValue();
+                        SimpleCumulativeRP.Node tmp = a.startNMCTS();
+                        action(tmp.action.from, tmp.action.to,board);
+                        jlhSimulasi += a.getTotalSimulasi();
+                    }
+                }
+            }
+
+            dg.Items.Add(new Result(i + 1, getResult(), jlhSimulasi / panjangPermainan));
+        }
+
+        private void onClick_same(object obj, RoutedEventArgs e)
+        {
+            dg.Items.Clear();
+            this.txtSame.Text = "";
+            DateTime mulaiEksekusi = DateTime.Now;
+            for (int m = 0; m < jlhPertandingan.Value.Value; m++)
+            {
+                inisiasiGame2();
+                RP(m, 2, board);
+                inisiasiGame3();
+                TPLM(m+1, 2, board);
+                inisiasiGame3();
+                TPLMVL(m + 2, 2, board);
+                inisiasiGame3();
+                RP(m+3, 4, board);
+                inisiasiGame3();
+                TPLM(m + 4, 4, board);
+                inisiasiGame3();
+                TPLMVL(m+5, 4, board);
+                inisiasiGame3();
+                RP(m+6, 8, board);
+                inisiasiGame3();
+                TPLM(m+7, 8, board);
+                inisiasiGame3();
+                TPLMVL(m+8, 8, board);
+                inisiasiGame3();
+                RP(m+9, 16, board);
+                inisiasiGame3();
+                TPLM(m+10, 16, board);
+                inisiasiGame3();
+                TPLMVL(m+11, 16, board);
+                //ganti fungsi evaluasi
+                switchFungsiEvaluasi();
+                inisiasiGame3();
+                RP(m+12, 2, board);
+                inisiasiGame3();
+                TPLM(m+13, 2, board);
+                inisiasiGame3();
+                TPLMVL(m + 14, 2, board);
+                inisiasiGame3();
+                RP(m + 15, 4, board);
+                inisiasiGame3();
+                TPLM(m + 16, 4, board);
+                inisiasiGame3();
+                TPLMVL(m + 17, 4, board);
+                inisiasiGame3();
+                RP(m + 18, 8, board);
+                inisiasiGame3();
+                TPLM(m + 19, 8, board);
+                inisiasiGame3();
+                TPLMVL(m + 20, 8, board);
+                inisiasiGame3();
+                RP(m + 21, 16, board);
+                inisiasiGame3();
+                TPLM(m + 22, 16, board);
+                inisiasiGame3();
+                TPLMVL(m + 23, 16, board);
+                //ganti fungsi evaluasi
+                switchFungsiEvaluasi();
+            };
+
+            writeToFile("ALL_"+DateTime.Now.Ticks, null, mulaiEksekusi);
+        }
+
 
         private void inisiasiGame()
         {
@@ -280,7 +325,42 @@ namespace View
             switchTurn();
         }
 
-        private void action(Position from, Position to)
+        private void inisiasiGame2()
+        {
+            currentTurn = PLAYER.HUMAN;
+            board = new Board();
+            tmpBoard = new Board(board.getBoardState());
+            Position tmp = Shuffle.getShufflePosition();
+            board.flip(tmp.row, tmp.column);
+            if (board.array[tmp.row, tmp.column].number > 0)
+            {
+                side = Constant.BLACK_SIDE;
+            }
+            else
+            {
+                side = Constant.RED_SIDE;
+            }
+            switchTurn();
+        }
+
+        private void inisiasiGame3()
+        {
+            currentTurn = PLAYER.HUMAN;
+            board = new Board(tmpBoard.getBoardState());
+            Position tmp = Shuffle.getShufflePosition();
+            board.flip(tmp.row, tmp.column);
+            if (board.array[tmp.row, tmp.column].number > 0)
+            {
+                side = Constant.BLACK_SIDE;
+            }
+            else
+            {
+                side = Constant.RED_SIDE;
+            }
+            switchTurn();
+        }
+
+        private void action(Position from, Position to,Board board)
         {
             //action flipping
             if (from.row == to.row && from.column == to.column)
@@ -375,35 +455,35 @@ namespace View
             //-i display GUI interface
             //-l log off
             //Process.Start("shutdown", "/s /f");
-
-            System.Windows.Forms.Application.SetSuspendState(System.Windows.Forms.PowerState.Hibernate, false, false);
+            MessageBox.Show("selesai");
+            //System.Windows.Forms.Application.SetSuspendState(System.Windows.Forms.PowerState.Hibernate, false, false);
         }
 
         public void writeToFile(string namaFile,Kesimpulan kesimpulan,DateTime waktuMulaiEksekusi)
         {
-            //using (StreamWriter writer = new StreamWriter(namaFile + ".txt", true))
-            //{
-            //    writer.WriteLine("Struktur Nama File : " + "NAMA METODE _ FUNGSI EVALUASI _ JUMLAH THREAD _ WAKTU MOVE _ JUMLAH PERTANDINGAN");
-            //    writer.WriteLine("==========================================================================");
-            //    writer.WriteLine("Waktu Mulai Eksekusi : " + waktuMulaiEksekusi);
-            //    writer.WriteLine("Waktu Selesai Eksekusi : " + DateTime.Now);
-            //    writer.WriteLine("==========================================================================");
-            //    writer.WriteLine("Permainan-ke\t Hasil\t Rata-rata simulasi (move)");
-            //    writer.WriteLine("==========================================================================");
-            //    for (int i = 0; i < dg.Items.Count; i++)
-            //    {
-            //        Result tmpResult = dg.Items[i] as Result;
-            //        writer.WriteLine("{0}\t\t {1}\t {2}", tmpResult.permainanKe, tmpResult.hasilPermainan, tmpResult.jlhSimulasi);
-            //    }
-            //    writer.WriteLine("==========================================================================");
-            //    writer.WriteLine(kesimpulan.getStringWinRate());
-            //    writer.WriteLine(kesimpulan.getStringDrawRate());
-            //    writer.WriteLine(kesimpulan.getStringLossRate());
-            //    writer.WriteLine(kesimpulan.getStringSimulationRate());
-            //}
-            Console.Clear();
-            parallelization.closeConsole();
-            //matikanKomputer();
+            using (StreamWriter writer = new StreamWriter(namaFile + ".txt", true))
+            {
+                writer.WriteLine("Struktur Nama File : " + "NAMA METODE _ FUNGSI EVALUASI _ JUMLAH THREAD _ WAKTU MOVE _ JUMLAH PERTANDINGAN");
+                writer.WriteLine("==========================================================================");
+                writer.WriteLine("Waktu Mulai Eksekusi : " + waktuMulaiEksekusi);
+                writer.WriteLine("Waktu Selesai Eksekusi : " + DateTime.Now);
+                writer.WriteLine("==========================================================================");
+                writer.WriteLine("Permainan-ke\t Hasil\t Rata-rata simulasi (move)");
+                writer.WriteLine("==========================================================================");
+                for (int i = 0; i < dg.Items.Count; i++)
+                {
+                    Result tmpResult = dg.Items[i] as Result;
+                    writer.WriteLine("{0}\t\t {1}\t {2}", tmpResult.permainanKe, tmpResult.hasilPermainan, tmpResult.jlhSimulasi);
+                }
+                //writer.WriteLine("==========================================================================");
+                //writer.WriteLine(kesimpulan.getStringWinRate());
+                //writer.WriteLine(kesimpulan.getStringDrawRate());
+                //writer.WriteLine(kesimpulan.getStringLossRate());
+                //writer.WriteLine(kesimpulan.getStringSimulationRate());
+            }
+            //Console.Clear();
+            //parallelization.closeConsole();
+            matikanKomputer();
         }
 
         public class Result
@@ -417,6 +497,19 @@ namespace View
                 this.permainanKe = permainanKe;
                 this.hasilPermainan = hasilPermainan;
                 this.jlhSimulasi = jlhSimulasi;
+            }
+        }
+
+        public void switchFungsiEvaluasi(){
+            if (this.radioCR.IsChecked.Value)
+            {
+                this.radioCR.IsChecked = false;
+                this.radioSRCR.IsChecked = true;
+            }
+            else
+            {
+                this.radioCR.IsChecked = true;
+                this.radioSRCR.IsChecked = false;
             }
         }
 

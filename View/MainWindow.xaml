@@ -66,7 +66,7 @@
         </ad:DockingManager>
 
         <StatusBar Grid.Row="2">
-            <StatusBarItem Content="Tournament : ">
+            <StatusBarItem Content="Mode Permainan : ">
             </StatusBarItem>
             <StatusBarItem Content="Human Vs Computer" Name="tournament">
             </StatusBarItem>

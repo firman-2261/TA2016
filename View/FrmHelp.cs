@@ -54,12 +54,6 @@ namespace View
 
         }
 
-        private void FrmHelp_Load(object sender, EventArgs e)
-        {
-           
-       
-        }
-
         private void FrmHelp_FormClosing(object sender, FormClosedEventArgs e)
         {
             Close();

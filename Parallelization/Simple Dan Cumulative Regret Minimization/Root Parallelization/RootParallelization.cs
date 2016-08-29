@@ -20,7 +20,6 @@ namespace Parallelization.SRCR.Root
 
         public Node startNMCTS()
         {
-            timer.Start();
             taskQueue jlhParallelThread = new taskQueue(base.jlhParallel);
             Task<DeterministicNode>[] searchTree = new Task<DeterministicNode>[base.jlhParallel];
 
@@ -39,7 +38,6 @@ namespace Parallelization.SRCR.Root
                         ((NondeterministicNode)searchTree[i].Result.children[j]).sumWinRate();
                     }
                 }
-
             }
 
             //sum total
@@ -100,11 +98,13 @@ namespace Parallelization.SRCR.Root
             DeterministicNode searchTree = new DeterministicNode(this.board.getBoardState(), null, NODE.NONE, Constant.NONE, Constant.NONE);
             searchTree.expand();
             searchTree.updateStatus(searchTree.rollOut(), searchTree.s);
+            timer.Start();
+            
             while (timer.Elapsed.TotalSeconds <= base.wktThinking)
             {
                 //if (base.isVerboseRunning)
                 //{
-                //    Console.WriteLine("Left Time : " + (wktThinking - timer.Elapsed.TotalSeconds));
+                    //Console.WriteLine("Left Time : " + (wktThinking - timer.Elapsed.TotalSeconds));
                 //}
                 searchTree.selectAction();
             }

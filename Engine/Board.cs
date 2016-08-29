@@ -953,26 +953,19 @@ namespace Engine
                 {
                     if (!this.isPositionEmpty(i, j))
                     {
-                        //Pastikan terlebih dahulu bidak pada posisi tersebut merupakan bidak kawan
-                        //if (isSameSide(this.array[i, j], this.sideToMove))
-                        //{
-                            //if (!isPositionEmpty(i, j))
-                            //{
-                                //PASTIKAN TERLEBIH DAHULU APAKAH BIDAK TERSEBUT SUDAH TERBUKA
-                                if (isFlipped(i, j))
-                                {
-                                    if (isSameSide(this.array[i, j], this.sideToMove))
-                                    {
-                                        totalAksi += generateMove(i, j).Count;
-                                    }
-                                }
-                                //kalau belum dibuka, maka langsung tambahkan
-                                else
-                                {
-                                    totalAksi++;
-                                }
-                            //}
-                        //}
+                        //PASTIKAN TERLEBIH DAHULU APAKAH BIDAK TERSEBUT SUDAH TERBUKA
+                        if (isFlipped(i, j))
+                        {
+                            if (isSameSide(this.array[i, j], this.sideToMove))
+                            {
+                                totalAksi += generateMove(i, j).Count;
+                            }
+                        }
+                        //kalau belum dibuka, maka langsung tambahkan
+                        else
+                        {
+                            totalAksi++;
+                        }
                     }
                 }
             }
@@ -994,35 +987,28 @@ namespace Engine
                 {
                     if (!isPositionEmpty(i, j))
                     {
-                        //Pastikan terlebih dahulu bidak pada posisi tersebut merupakan bidak kawan
-                        //if (isSameSide(this.array[i, j], this.sideToMove))
-                        //{
-                            if (!isPositionEmpty(i, j))
+                        //PASTIKAN TERLEBIH DAHULU APAKAH BIDAK TERSEBUT SUDAH TERBUKA
+                        if (isFlipped(i, j))
+                        {
+                            if (isSameSide(this.array[i, j], this.sideToMove))
                             {
-                                //PASTIKAN TERLEBIH DAHULU APAKAH BIDAK TERSEBUT SUDAH TERBUKA
-                                if (isFlipped(i, j))
+                                List<Position> move = generateMove(i, j);
+                                if (move.Count != 0)
                                 {
-                                    if (isSameSide(this.array[i, j], this.sideToMove))
-                                    {
-                                        List<Position> move = generateMove(i, j);
-                                        if (move.Count != 0)
-                                        {
-                                            DeterministicActions de = new DeterministicActions(new Position(i, j), move, ACTION.MOVE);
-                                            tmp.Add(de);
-                                        }
-                                    }
-                                }
-                                //kalau belum dibuka, maka hitung distribusi flipping
-                                else
-                                {
-                                    NondeterministicActions non = probabilityOfFlipping(i, j);
-                                    if (non != null)
-                                    {
-                                        tmp.Add(non);
-                                    }
+                                    DeterministicActions de = new DeterministicActions(new Position(i, j), move, ACTION.MOVE);
+                                    tmp.Add(de);
                                 }
                             }
-                        //}
+                        }
+                        //kalau belum dibuka, maka hitung distribusi flipping
+                        else
+                        {
+                            NondeterministicActions non = probabilityOfFlipping(i, j);
+                            if (non != null)
+                            {
+                                tmp.Add(non);
+                            }
+                        }
                     }
                 }
             }
@@ -1524,13 +1510,8 @@ namespace Engine
         /// <param name="row"></param>
         /// <param name="column"></param>
         /// <returns></returns>
-        /// <exception cref="InvalidOperationException">Tidak ada bidak pada posisi tersebut</exception>
         public bool isFlipped(int row, int column)
         {
-            /*if (isPositionEmpty(row, column))
-            {
-                throw new InvalidOperationException("Tidak ada bidak pada posisi tersebut");
-            }*/
             if ((Mask.FLIP[Mask.OFFSET[row, column]] & bitboard[array[row, column].index]) == 0)
             {
                 return true;
@@ -1647,7 +1628,6 @@ namespace Engine
                 bitboard[array[fromRow, fromColumn].index] |= generateMaskInitialize(toRow, toColumn);
                 //3. isi posisi tujuan dengan posisi awal
                 bitboard[array[toRow, toColumn].index] |= generateMaskInitialize(fromRow, fromColumn);
-
 
                 Piece tmp = this.array[fromRow, fromColumn];
                 this.array[fromRow, fromColumn] = this.array[toRow, toColumn];

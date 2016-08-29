@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
 using Engine;
 using System.Configuration;
 
@@ -47,21 +48,28 @@ namespace View
         {
             this.txtTempatInformasi.Text = "";
             this.tournament.Content = "-";
+            this.tree.Content = null;
             this.game.Content = new Home();
+            this.game.IsActive = true;
+            
         }
 
         private void menuHumanVsHuman_Click(object sender, RoutedEventArgs e)
         {
             this.txtTempatInformasi.Text = "";
             this.tournament.Content = "Human Vs Human";
-            game.Content = new GameCDC(this, TOURNAMENT.HUMAN_VS_HUMAN); 
+            this.tree.Content = null;
+            game.Content = new GameCDC(this, TOURNAMENT.HUMAN_VS_HUMAN);
+            this.game.IsActive = true;
         }
 
         private void menuHumanVsComp_Click(object sender, RoutedEventArgs e)
         {
             this.txtTempatInformasi.Text = "";
             this.tournament.Content = "Human Vs Computer";
+            this.tree.Content = null;
             game.Content = new GameCDC(this, TOURNAMENT.HUMAN_VS_COMPUTER);
+            this.game.IsActive = true;
 
         }
         //private void menuGenerate_Click(object sender, RoutedEventArgs e)
@@ -149,16 +157,19 @@ namespace View
         private void menuTree_Click(object sender, RoutedEventArgs e)
         {
             this.tree.Show();
+            this.tree.IsActive = true;
         }
 
         private void menuOptions_Click(object sender, RoutedEventArgs e)
         {
             this.options.Show();
+            this.options.IsActive = true;
         }
 
         private void menuOutput_Click(object sender, RoutedEventArgs e)
         {
             this.output.Show();
+            this.output.IsActive = true;
         }
         private void menuBantuan_Click(object sender, RoutedEventArgs e)
         {
